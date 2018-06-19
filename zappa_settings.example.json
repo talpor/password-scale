@@ -1,0 +1,19 @@
+{
+    "server": {
+        "aws_region": "us-west-2",
+        "app_function": "server.server",
+        "profile_name": "default",
+        "project_name": "scale-storage-server",
+        "runtime": "python3.6",
+        "s3_bucket": "my-zappa-s3-bucket",
+        "environment_variables": {
+            "AWS_ACCESS_KEY_ID": "AK111111111111111111",
+            "AWS_SECRET_ACCESS_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "ENCRYPTION_KEY_URL": "https://scale.talpor.com/public_key",
+            "ONETIMESECRET_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+            "ONETIMESECRET_USER": "my-onetimesecret-user@provider.com",
+            "PASSWORD_STORAGE": "my-password-storage-s3-bucket",
+            "SECRET_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
+    }
+}
