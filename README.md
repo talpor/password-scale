@@ -6,11 +6,11 @@ This project was build focused in establishing a communication where the trustne
 
 ## Commands
 
-- `/pass` or `/pass list` list the available passwords in this channel.
+- `/pass` or `/pass list` list the available passwords in the channel.
 - `/pass <secret>` or `/pass show <secret>` retrieve a one time use link with the secret content, this link expires in 15 minutes.
 - `/pass insert <secret>` retrieve a link with an editor to create a secret, this link expires in 15 minutes.
-- `/pass remove <secret>` make unreachable the secret, to complete deletion in necessary doing it manually from the s3 password storage. 
-- `/pass register <password_server_url>` this is the command used for the initial setup, it is only necessary to execute it once. 
+- `/pass remove <secret>` make unreachable the secret, to complete deletion in necessary doing it manually from the s3 password storage.
+- `/pass register <password_server_url>` this is the command used for the initial setup, it is only necessary to execute it once.
 
 ## How it work?
 
@@ -37,7 +37,7 @@ Been _Alice_ and _Bob_ members of the same Slack group, they need to share the p
 
 - _**Bob:**_ Requests a link to see the secret (`/pass Bar` or `/pass show Bar`)
 - *Proxy Server:* Requests the secret to the password server using the Slack team name and channel id
-- *Password server:* Reads and decrypt the secret 
+- *Password server:* Reads and decrypt the secret
 - *Password server:* Generates one time use link with the secret, valid for 15 minutes (using One-Time Secret API)
 - *Password server:* Encrypts the link with the _Proxy Server_ public key
 - *Password server:* Sends the encrypted link to the _Proxy Server_
@@ -48,6 +48,8 @@ Been _Alice_ and _Bob_ members of the same Slack group, they need to share the p
 - *Onetimesecret*: Shows and destroys the secret
 
 ## How to deploy your own Password Server
+
+In order to be efficient with the resource management and facilitate the deploy process this guide shows the process to put in producction a serverless infracstructure using AWS Lambda plus API Gateway using [Zappa](https://github.com/Miserlou/Zappa)
 
 ### Requirements
 
@@ -61,12 +63,12 @@ Been _Alice_ and _Bob_ members of the same Slack group, they need to share the p
 
 ### Step-by-step guide
 
-- Clone _password-scale_ project `git clone git@github.com:talpor/password-scale.git` and `cd password-scale`
+- Clone _password-scale_ project `git clone git@github.com:talpor/password-scale.git` and do `cd password-scale`
 - Create a virtual environment `mkvirtualenv password-scale -p python3`
 - Install dependencies `pip install -r requirements/storage-server.txt`
 - Create _zappa_settings.json_ file based on _zappa_settings.example.json_ `cp zappa_settings.example.json zappa_settings.json`
 - Modify _"s3_bucket"_ and _"environment_variables"_ variables in the new _zappa_settings.json_ file, replacing each value for your owns (for the _"environment_variables"_ see the table below)
-- Deploy your app `zappa deploy`
+- Deploy your server `zappa deploy`
 
 Done! now you will need to register your server in Slack, using the command `/pass register <new_server_url>` to retrieve your server URL use the command `zappa status` and check the _API Gateway URL_.
 
@@ -74,9 +76,9 @@ Done! now you will need to register your server in Slack, using the command `/pa
 
 | Key | Description |
 | --- | ----------- |
-| AWS_ACCESS_KEY_ID | Your AWS public key, this key needs permissions to use AWS Lambda, AWS API Gateway and S3 |
+| AWS_ACCESS_KEY_ID | Your AWS public key, this key only needs permission to use S3 |
 | AWS_SECRET_ACCESS_KEY | Your AWS private key |
-| ENCRYPTION_KEY_URL | This is the url to retrieve the _Proxy Server_ public key, it is not necessary to change it |
+| ENCRYPTION_KEY_URL | This is the url to retrieve the _Proxy Server_ public key, the default value is correct, it is not necessary to change it |
 | ONETIMESECRET_KEY | Your One-Time Secret API key |
 | ONETIMESECRET_USER | Your One-Time Secret user name |
 | PASSWORD_STORAGE | Unique name for your password storage bucket |
