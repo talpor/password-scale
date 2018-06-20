@@ -19,7 +19,7 @@ def decrypt(encrypted_message, private_key):
     try:
         return rsakey.decrypt(base64.b64decode(encrypted_message))
     except binascii.Error:
-        return '<decrypting error>'
+        return None
 
 
 def generate_key(first_key):

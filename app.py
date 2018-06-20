@@ -93,17 +93,23 @@ def api():
         return ('{} team is not registered, use the command `/pass register '
                 'https://your.password.application` to start, see the '
                 'configuration guide -> https://github.com/talpor/'
-                'password-scale/blob/master/README.rst').format(team_domain)
+                'password-scale/blob/master/README.md').format(team_domain)
 
     if command[0] in ['', 'list']:
         dir_ls = cmd.list(team, channel)
         return '```{}```'.format(dir_ls)
 
-    elif command[0] == 'insert' and len(command) == 2:
+    if command[0] == 'insert' and len(command) == 2:
         app = command[1]
         valid_path = cmd.generate_insert_token(team, channel, app)
         return 'Add _{}_ password in: {}/insert/{}'.format(
             app, SITE, valid_path)
+
+    if command[0] == 'remove' and len(command) == 2:
+        app = command[1]
+        valid_path = cmd.remove(team, channel, app)
+        return ('Now the password _{}_ is unreachable, to complete removal '
+                'contact the system administrator.').format(app)
 
     if command[0] == 'show' and len(command) == 2:
         app = command[1]

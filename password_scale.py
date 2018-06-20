@@ -34,8 +34,14 @@ class PasswordScaleCMD(object):
             response = requests.post(team.api('list/{}'.format(channel)))
         except requests.exceptions.ConnectionError:
             raise PasswordScaleError('Timeout: {}'.format(ERRMSG))
-        return decrypt(response.text, self.private_key).decode(
-            'utf-8').replace('{}/'.format(channel), '├── ')
+
+        msg = decrypt(response.text, self.private_key)
+        if msg == b'':
+            return '<empty>'
+        elif msg is None:
+            raise PasswordScaleError('Decryption error')
+
+        return msg.decode('utf-8').replace('{}/'.format(channel), '├── ')
 
     def generate_insert_token(self, team, channel, app):
         token = ''.join(random.SystemRandom().choice(
@@ -59,6 +65,15 @@ class PasswordScaleCMD(object):
                 'Error {}: {}'.format(response.status_code, ERRMSG))
         del self.cache[token]
 
+    def remove(self, team, channel, app):
+        response = requests.post(
+            team.api('remove'),
+            data={'channel': channel, 'app': app})
+
+        if response.status_code != requests.codes.ok:
+            raise PasswordScaleError(
+                'Error {}: {}'.format(response.status_code, ERRMSG))
+
     def show(self, team, channel, app):
         response = requests.post(
             team.api('onetime_link'),
@@ -69,8 +84,8 @@ class PasswordScaleCMD(object):
                 response.text, self.private_key).decode('utf-8')
         elif response.status_code == requests.codes.not_found:
             return None
-        else:
-            raise PasswordScaleError('Unexpected error')
+
+        raise PasswordScaleError('Unexpected error')
 
     def __init__(self, db, cache, private_key):
         self.db = db

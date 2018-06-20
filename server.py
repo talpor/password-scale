@@ -6,7 +6,9 @@ from contrib.onetimesecret import OneTimeCli
 
 import boto3
 import os
+import re
 import requests
+import time
 
 server = Flask(__name__)
 
@@ -23,7 +25,7 @@ public_key = secret_key.publickey().exportKey("PEM")
 
 s3 = boto3.client(
     's3',
-    region_name='us-west-2',
+    # region_name='us-west-2',
     aws_access_key_id=AWS_ACCESS_KEY_ID,
     aws_secret_access_key=AWS_SECRET_ACCESS_KEY
 )
@@ -38,12 +40,31 @@ def _get_encryption_key():
         if e.response['Error']['Code'] == 'NoSuchKey':
             r = requests.get(ENCRYPTION_KEY_URL)
             if r.status_code != requests.codes.ok:
-                raise Exception('Unable to retrieve {}'.format(key))
+                raise Exception('Unable to retrieve {} from {}'.format(
+                    key, ENCRYPTION_KEY_URL))
             s3.put_object(Bucket=bucket, Body=str.encode(r.text), Key=key)
             return r.text
         else:
             raise e
     return response['Body'].read()
+
+
+def _save_backup_copy(bucket, channel, key):
+    path = key.split('/')
+    file = path.pop()
+    route = '/'.join(path) + '/' if path else ''
+    new_key = '{}/{}.{}.{}'.format(channel, route, file, int(time.time()))
+    try:
+        s3.copy_object(
+            Bucket=bucket,
+            CopySource='{}/{}/{}'.format(bucket, channel, key),
+            Key=new_key)
+    except ClientError as e:
+        if e.response['Error']['Code'] in ['NoSuchKey', 'NoSuchBucket']:
+            return False
+        else:
+            raise e
+    return True
 
 
 @server.route('/public_key', methods=['GET'])
@@ -72,19 +93,20 @@ def get_onetime_link():
 
 @server.route('/list/<prefix>', methods=['POST'])
 def list(prefix):
+    output = ''
     try:
         bucket = s3.list_objects(Bucket=PASSWORD_STORAGE, Prefix=prefix)
     except ClientError as e:
         if e.response['Error']['Code'] == 'NoSuchBucket':
             s3.create_bucket(Bucket=PASSWORD_STORAGE)
-            output = '<empty>'
         else:
             raise e
     else:
         if 'Contents' in bucket:
-            output = '\n'.join([x['Key'] for x in bucket['Contents']])
-        else:
-            output = '<empty>'
+            output = '\n'.join([
+                x['Key'] for x in bucket['Contents']
+                if not re.match('.+\/\.\w+', x['Key'])
+            ])
 
     encryption_key = _get_encryption_key()
     return encrypt(output, encryption_key)
@@ -92,19 +114,34 @@ def list(prefix):
 
 @server.route('/insert', methods=['POST'])
 def insert():
+    bucket = PASSWORD_STORAGE
     kargs = {
-        'Bucket': PASSWORD_STORAGE,
+        'Bucket': bucket,
         'Body': str.encode(request.form['secret']),  # already encrypted
         'Key': request.form['path']
     }
     try:
+        _save_backup_copy(bucket, *request.form['path'].split('/', 1))
         s3.put_object(**kargs)
     except ClientError as e:
         if e.response['Error']['Code'] == 'NoSuchBucket':
-            s3.create_bucket(Bucket=PASSWORD_STORAGE)
+            s3.create_bucket(Bucket=bucket)
             s3.put_object(**kargs)
         else:
             raise e
+    return 'ok'
+
+
+@server.route('/remove', methods=['POST'])
+def remove():
+    channel = request.form['channel']
+    app = request.form['app']
+    bucket = PASSWORD_STORAGE
+
+    if not _save_backup_copy(bucket, channel, app):
+        abort(403)
+
+    s3.delete_object(Bucket=bucket, Key='{}/{}'.format(channel, app))
     return 'ok'
 
 
