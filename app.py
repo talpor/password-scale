@@ -17,7 +17,7 @@ import validators
 SITE = os.environ.get('SITE')
 VERIFICATION_TOKEN = os.environ.get('VERIFICATION_TOKEN')
 SLACK_APP_SECRET = os.environ.get('SLACK_APP_SECRET')
-SLACK_APP_ID = '235505574834.384094057591'
+SLACK_APP_ID = '2554558892.385841792964'
 
 secret_key = generate_key(os.environ.get('SECRET_KEY'))
 private_key = secret_key.exportKey("PEM")
@@ -194,6 +194,11 @@ def landing():
     )
 
     return render_template('landing.html', authorize_url=authorize_url)
+
+
+@application.route('/privacy', methods=['GET'])
+def privacy():
+    return render_template('privacy.html')
 
 
 if __name__ == '__main__':
