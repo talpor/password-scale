@@ -1,0 +1,14 @@
+body {
+    background-color: #f5f5f8;
+    font-family: 'Open Sans';
+}
+.container {
+    width: 900px;
+}
+i.fa-github {
+    color: #333;
+    font-size: 39px;
+    line-height: 1;
+    vertical-align: bottom;
+    padding: 0 5px;
+}

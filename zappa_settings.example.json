@@ -1,6 +1,6 @@
 {
     "server": {
-        "aws_region": "us-west-2",
+        "aws_region": "us-east-1",
         "app_function": "server.server",
         "profile_name": "default",
         "project_name": "scale-storage-server",

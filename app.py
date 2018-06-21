@@ -4,7 +4,7 @@ from flask import abort
 from flask import Flask, request
 from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
-from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse, urlunparse, urlencode
 
 from contrib.crypto import generate_key, encrypt
 from password_scale import PasswordScaleCMD, PasswordScaleError
@@ -70,7 +70,7 @@ def api():
     channel = data['channel_id']
 
     if command[0] == 'help':
-        return 'help dialog :)'
+        return 'WIP: https://github.com/talpor/password-scale'
 
     elif command[0] == 'register' and len(command) == 2:
         url = command[1]
@@ -148,6 +148,17 @@ def insert(token):
         return render_template('insert.html', secret=re.sub(
             '[a-zA-Z0-9]+\/', '', path, 1))
     abort(404)
+
+
+@application.route('/', methods=['GET'])
+def landing():
+    authorize_url = '{}{}'.format(
+        'https://slack.com/oauth/authorize', urlencode({
+            'client_id': '235505574834.384094057591',
+            'scope': 'commands'
+        })
+    )
+    return render_template('landing.html', authorize_url=authorize_url)
 
 
 if __name__ == '__main__':
