@@ -9,7 +9,6 @@
         "environment_variables": {
             "AWS_ACCESS_KEY_ID": "AK111111111111111111",
             "AWS_SECRET_ACCESS_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-            "ENCRYPTION_KEY_URL": "https://scale.talpor.com/public_key",
             "ONETIMESECRET_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "ONETIMESECRET_USER": "my-onetimesecret-user@provider.com",
             "PASSWORD_STORAGE": "my-password-storage-s3-bucket",

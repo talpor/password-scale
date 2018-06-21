@@ -80,7 +80,8 @@ Done! now you will need to register your server in Slack, using the command `/pa
 | --- | ----------- |
 | AWS_ACCESS_KEY_ID | Your AWS public key, this key only needs permission to use S3 |
 | AWS_SECRET_ACCESS_KEY | Your AWS private key |
-| ENCRYPTION_KEY_URL | This is the url to retrieve the _Proxy Server_ public key, the default value is correct, it is not necessary to change it |
+| AWS_S3_REGION (optional) | The AWS region where the password storage bucket will be created, the default value is `us-east-1` |
+| ENCRYPTION_KEY_URL (optional) | This is the url to retrieve the _Proxy Server_ public key, , the default value is `https://scale.talpor.com/public_key` |
 | ONETIMESECRET_KEY | Your One-Time Secret API key |
 | ONETIMESECRET_USER | Your One-Time Secret user name |
 | PASSWORD_STORAGE | Unique name for your password storage bucket |

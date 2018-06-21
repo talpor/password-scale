@@ -14,10 +14,14 @@ server = Flask(__name__)
 
 AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
 AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
-ENCRYPTION_KEY_URL = os.environ.get('ENCRYPTION_KEY_URL')
+ENCRYPTION_KEY_URL = os.environ.get(
+    'ENCRYPTION_KEY_URL',
+    'https://scale.talpor.com/public_key'
+)
 ONETIMESECRET_KEY = os.environ.get('ONETIMESECRET_KEY')
 ONETIMESECRET_USER = os.environ.get('ONETIMESECRET_USER')
 PASSWORD_STORAGE = os.environ.get('PASSWORD_STORAGE')
+AWS_S3_REGION = os.environ.get('AWS_S3_REGION', 'us-east-1')
 
 secret_key = generate_key(os.environ.get('SECRET_KEY'))
 private_key = secret_key.exportKey("PEM")
@@ -25,7 +29,7 @@ public_key = secret_key.publickey().exportKey("PEM")
 
 s3 = boto3.client(
     's3',
-    region_name='us-east-1',
+    region_name=AWS_S3_REGION,
     aws_access_key_id=AWS_ACCESS_KEY_ID,
     aws_secret_access_key=AWS_SECRET_ACCESS_KEY
 )
