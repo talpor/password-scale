@@ -25,7 +25,7 @@ public_key = secret_key.publickey().exportKey("PEM")
 
 s3 = boto3.client(
     's3',
-    # region_name='us-west-2',
+    region_name='us-east-1',
     aws_access_key_id=AWS_ACCESS_KEY_ID,
     aws_secret_access_key=AWS_SECRET_ACCESS_KEY
 )
