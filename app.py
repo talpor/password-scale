@@ -17,6 +17,7 @@ import validators
 SITE = os.environ.get('SITE')
 VERIFICATION_TOKEN = os.environ.get('VERIFICATION_TOKEN')
 SLACK_APP_SECRET = os.environ.get('SLACK_APP_SECRET')
+SLACK_APP_ID = '235505574834.384094057591'
 
 secret_key = generate_key(os.environ.get('SECRET_KEY'))
 private_key = secret_key.exportKey("PEM")
@@ -28,14 +29,14 @@ application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(application)
 cache = Cache('/tmp/tokencache')
-cmd = PasswordScaleCMD(db, cache, private_key)
+cmd = PasswordScaleCMD(cache, private_key)
 
 
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String, unique=True)
-    url = db.Column(db.String)
-    public_key = db.Column(db.Text)
+    team_id = db.Column(db.String, unique=True)
+    url = db.Column(db.String, nullable=True)
+    public_key = db.Column(db.Text, nullable=True)
     created = db.Column(db.DateTime)
 
     def api(self, path):
@@ -43,15 +44,13 @@ class Team(db.Model):
         url_parts[2] = os.path.join(url_parts[2], path)
         return urlunparse(url_parts)
 
-    def __init__(self, name, url, public_key, created=None):
-        self.name = name
-        self.url = url
-        self.public_key = public_key
+    def __init__(self, team_id, created=None):
+        self.team_id = team_id
         if self.created is None:
             self.created = datetime.utcnow()
 
     def __repr__(self):
-        return self.name
+        return 'Slack team: {}'.format(self.team_id)
 
 
 @application.route('/public_key', methods=['GET'])
@@ -63,39 +62,42 @@ def get_public_key():
 def api():
     data = request.values.to_dict()
     command = re.split('\s+', data['text'])
+    team_id = data['team_id']
     team_domain = data['team_domain']
+    channel = data['channel_id']
 
     # ensuring that the request comes from slack
     if data['token'] != VERIFICATION_TOKEN:
         return abort(404)
 
-    channel = data['channel_id']
+    team = db.session.query(Team).filter_by(team_id=team_id).first()
 
     if command[0] == 'help':
         return 'WIP: https://github.com/talpor/password-scale'
 
-    elif command[0] == 'register' and len(command) == 2:
+    if command[0] == 'register' and len(command) == 2:
         url = command[1]
         if not validators.url(url):
             return 'Invalid URL format, use: https://<domain>'
-        new_team = Team(
-            name=team_domain,
-            url=url,
-            public_key=''
-        )
-        try:
-            cmd.register(new_team)
-        except PasswordScaleError as e:
-            return e.message
+
+        team.url = url
+        response = requests.get(team.api('public_key'))
+
+        if response.status_code != requests.codes.ok:
+            return ('Unable to retrieve the public_key '
+                    'from the server').format(team_domain)
+
+        team.public_key = response.text
+        db.session.commit()
 
         return '{} team successfully registered!'.format(team_domain)
 
-    team = db.session.query(Team).filter_by(name=team_domain).first()
-    if not team:
-        return ('{} team is not registered, use the command `/pass register '
-                'https://your.password.application` to start, see the '
-                'configuration guide -> https://github.com/talpor/'
-                'password-scale/blob/master/README.md').format(team_domain)
+    if not team.url:
+        return ('{} team does not have a password server registered, use '
+                'the command `/pass register https://your.password.server` '
+                'to start, check the configuration guide -> '
+                'https://github.com/talpor/password-scale/blob/master'
+                '/README.md').format(team_domain)
 
     if command[0] in ['', 'list']:
         dir_ls = cmd.list(team, channel)
@@ -152,26 +154,45 @@ def insert(token):
     abort(404)
 
 
+@application.route('/slack/oauth', methods=['GET'])
+def slack_oauth():
+    if 'code' not in request.args:
+        abort(400)
+
+    oauth_access_url = '{}{}'.format(
+        'https://slack.com/api/oauth.access?', urlencode({
+            'client_id': SLACK_APP_ID,
+            'client_secret': SLACK_APP_SECRET,
+            'code': request.args['code']
+        })
+    )
+    response = requests.get(oauth_access_url).json()
+    if 'ok' not in response or not response['ok']:
+        abort(403)
+
+    # deliberately does not store the `access_token` may be will be useful
+    # for a future feature but right now it is not necessary :thinking_face:
+
+    new_team = Team(
+        team_id=response['team_id'],
+        # access_token=response.json()['access_token'],
+    )
+
+    db.session.add(new_team)
+    db.session.commit()
+
+    return render_template('success.html')
+
+
 @application.route('/', methods=['GET'])
 def landing():
-    client_id = '235505574834.384094057591'
-    client_secret = SLACK_APP_SECRET
     authorize_url = '{}{}'.format(
         'https://slack.com/oauth/authorize?', urlencode({
-            'client_id': client_id,
+            'client_id': SLACK_APP_ID,
             'scope': 'commands'
         })
     )
-    if 'code' in request.form:
-        oauth_access_url = '{}{}'.format(
-            'https://slack.com/api/oauth.access?', urlencode({
-                'client_id': client_id,
-                'client_secret': client_secret,
-                'code': request.form['code']
-            })
-        )
-        response = requests.get(oauth_access_url)
-        # TODO: save access_token from response in Team model
+
     return render_template('landing.html', authorize_url=authorize_url)
 
 

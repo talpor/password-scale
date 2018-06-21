@@ -14,21 +14,6 @@ class PasswordScaleError(Exception):
 
 class PasswordScaleCMD(object):
 
-    def register(self, team):
-        try:
-            response = requests.get(team.api('public_key'))
-        except requests.exceptions.ConnectionError:
-            raise PasswordScaleError('Timeout: {}'.format(ERRMSG))
-
-        if response.status_code == requests.codes.ok:
-            team.public_key = response.text
-        else:
-            raise PasswordScaleError(
-                'Error {}: {}'.format(response.status_code, ERRMSG))
-
-        self.db.session.add(team)
-        self.db.session.commit()
-
     def list(self, team, channel):
         try:
             response = requests.post(team.api('list/{}'.format(channel)))
@@ -87,7 +72,6 @@ class PasswordScaleCMD(object):
 
         raise PasswordScaleError('Unexpected error')
 
-    def __init__(self, db, cache, private_key):
-        self.db = db
+    def __init__(self, cache, private_key):
         self.cache = cache
         self.private_key = private_key
