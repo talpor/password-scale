@@ -11,10 +11,12 @@ from password_scale import PasswordScaleCMD, PasswordScaleError
 
 import os
 import re
+import requests
 import validators
 
 SITE = os.environ.get('SITE')
 VERIFICATION_TOKEN = os.environ.get('VERIFICATION_TOKEN')
+SLACK_APP_SECRET = os.environ.get('SLACK_APP_SECRET')
 
 secret_key = generate_key(os.environ.get('SECRET_KEY'))
 private_key = secret_key.exportKey("PEM")
@@ -152,12 +154,24 @@ def insert(token):
 
 @application.route('/', methods=['GET'])
 def landing():
+    client_id = '235505574834.384094057591'
+    client_secret = SLACK_APP_SECRET
     authorize_url = '{}{}'.format(
-        'https://slack.com/oauth/authorize', urlencode({
-            'client_id': '235505574834.384094057591',
+        'https://slack.com/oauth/authorize?', urlencode({
+            'client_id': client_id,
             'scope': 'commands'
         })
     )
+    if 'code' in request.form:
+        oauth_access_url = '{}{}'.format(
+            'https://slack.com/api/oauth.access?', urlencode({
+                'client_id': client_id,
+                'client_secret': client_secret,
+                'code': request.form['code']
+            })
+        )
+        response = requests.get(oauth_access_url)
+        # TODO: save access_token from response in Team model
     return render_template('landing.html', authorize_url=authorize_url)
 
 
