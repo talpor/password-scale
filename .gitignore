@@ -3,6 +3,13 @@
 *.db
 zappa_settings.json
 
+# Compiled assets
+static/.webassets-cache
+static/dist
+
+# yarn libraries
+static/lib
+
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml

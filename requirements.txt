@@ -1,1 +1,1 @@
--r ./requirements/slack-application.txt
+-r ./requirements/web-server.txt

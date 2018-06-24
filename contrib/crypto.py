@@ -9,22 +9,22 @@ import binascii
 
 def encrypt(message, public_key):
     rsa_key = RSA.importKey(public_key)
-    rsa_key = PKCS1_OAEP.new(rsa_key)
-    return base64.b64encode(rsa_key.encrypt(str.encode(message)))
+    cipher = PKCS1_OAEP.new(rsa_key)
+    return base64.b64encode(cipher.encrypt(str.encode(message)))
 
 
 def decrypt(encrypted_message, private_key):
     rsakey = RSA.importKey(private_key)
-    rsakey = PKCS1_OAEP.new(rsakey)
+    cipher = PKCS1_OAEP.new(rsakey)
     try:
-        return rsakey.decrypt(base64.b64decode(encrypted_message))
+        return cipher.decrypt(base64.b64decode(encrypted_message))
     except binascii.Error:
         return None
 
 
 def generate_key(first_key):
     seed_128 = HMAC.new(
-        bytes(first_key, 'utf-8') + b"Application: 2nd key derivation"
+        bytes(first_key, 'utf-8') + b'Application: 2nd key derivation'
     ).digest()
 
     class PRNG(object):

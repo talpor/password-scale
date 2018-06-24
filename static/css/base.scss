@@ -1,0 +1,58 @@
+@import 'vars';
+@import 'reset';
+
+body {
+    font-family: $serif, serif;
+    font-size: 20px;
+    a {
+        color: $blue;
+    }
+    .mono {
+        font-family: $monospace, monospace;
+    }
+    .container {
+        width: 640px;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    i.fa-github {
+        color: $darh-gray;
+        font-size: 39px;
+        line-height: 1;
+        vertical-align: bottom;
+        padding: 0 5px;
+    }
+    #HeadingLine {
+        width: 100%;
+        background-color: $orange;
+        border-bottom: 4px solid $orange;
+    }
+    header {
+        .logo {
+            width: 48px;
+        }
+        .links {
+            float: right;
+            margin-top: 15px;
+        }
+        margin: 10px 0;
+    }
+    .btn {
+        font-family: inherit;
+        padding: 6px 12px;
+        cursor: pointer;
+        user-select: none;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        color: $darh-gray;
+        background-color: white;
+        border-color: $light-gray;
+    }
+    .btn:disabled {
+        background: #f9f9f9;
+        color: #a9a9a9;
+        cursor: default;
+    }
+}

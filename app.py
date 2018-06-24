@@ -1,8 +1,7 @@
 from datetime import datetime
 from diskcache import Cache
-from flask import abort
-from flask import Flask, request
-from flask import render_template
+from flask import Flask, abort, render_template, request
+from flask_assets import Environment, Bundle
 from flask_sqlalchemy import SQLAlchemy
 from urllib.parse import urlparse, urlunparse, urlencode
 
@@ -27,9 +26,25 @@ application = Flask(__name__)
 application.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(application)
+assets = Environment(application)
 cache = Cache('/tmp/tokencache')
 cmd = PasswordScaleCMD(cache, private_key)
+db = SQLAlchemy(application)
+
+all_css = Bundle(
+    'css/base.scss',
+    'css/insert.scss',
+    filters='scss',
+    output='dist/all.css'
+)
+insert_js = Bundle(
+    'js/wordlist.js',
+    'js/insert.js',
+    filters='babel',
+    output='dist/scripts.js'
+)
+assets.register('css_all', all_css)
+assets.register('js_insert', insert_js)
 
 
 class Team(db.Model):
@@ -138,19 +153,24 @@ def insert(token):
     team = db.session.query(Team).filter_by(id=team_id).first()
 
     if request.method == 'POST':
-        secret = request.form['secret'].replace('EOF', '')
-
+        secret = request.form['secret']
+        encrypted = 'encrypted' in request.form
+        if not encrypted:
+            # if javascript is disabled then the message comes unencrypted
+            secret = encrypt(secret, team.public_key)
         try:
-            # TODO: move encryption to the frontend
-            cmd.insert(token, encrypt(secret, team.public_key))
+            cmd.insert(token, secret)
         except PasswordScaleError as e:
             abort(e.message)
 
-        return 'ok'
+        return render_template('success.html')
 
     else:
-        return render_template('insert.html', secret=re.sub(
-            '[a-zA-Z0-9]+\/', '', path, 1))
+        return render_template(
+            'insert.html',
+            secret=re.sub('[a-zA-Z0-9]+\/', '', path, 1),
+            public_key=team.public_key
+        )
     abort(404)
 
 

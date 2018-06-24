@@ -4,3 +4,4 @@ diskcache==3.0.6
 Flask-SQLAlchemy==2.3.2
 psycopg2==2.7.4
 validators==0.12.2
+Flask-Assets==0.12
