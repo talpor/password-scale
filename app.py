@@ -16,7 +16,7 @@ import validators
 SITE = os.environ.get('SITE')
 VERIFICATION_TOKEN = os.environ.get('VERIFICATION_TOKEN')
 SLACK_APP_SECRET = os.environ.get('SLACK_APP_SECRET')
-SLACK_APP_ID = '2554558892.385841792964'
+SLACK_APP_ID = os.environ.get('SLACK_APP_ID', '2554558892.385841792964')
 
 secret_key = generate_key(os.environ.get('BIP39'))
 private_key = secret_key.exportKey("PEM")
