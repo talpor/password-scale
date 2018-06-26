@@ -190,16 +190,17 @@ def slack_oauth():
     if 'ok' not in response or not response['ok']:
         abort(403)
 
-    # deliberately does not store the `access_token` may be will be useful
-    # for a future feature but right now it is not necessary :thinking_face:
+    team_id = response['team_id']
 
-    new_team = Team(
-        team_id=response['team_id'],
-        # access_token=response.json()['access_token'],
-    )
-
-    db.session.add(new_team)
-    db.session.commit()
+    if not db.session.query(Team).filter_by(team_id=team_id).first():
+        # deliberately does not store the `access_token` may be will be useful
+        # for a future feature but right now it is not necessary :thinking_face:
+        new_team = Team(
+            team_id=response['team_id'],
+            # access_token=response.json()['access_token'],
+        )
+        db.session.add(new_team)
+        db.session.commit()
 
     return render_template('success.html')
 
