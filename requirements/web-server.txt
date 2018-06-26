@@ -1,7 +1,8 @@
 -r ./base.txt
 
 diskcache==3.0.6
+Flask-Assets==0.12
 Flask-SQLAlchemy==2.3.2
+gunicorn==19.8.1
 psycopg2==2.7.4
 validators==0.12.2
-Flask-Assets==0.12

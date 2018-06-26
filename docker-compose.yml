@@ -9,4 +9,4 @@ services:
       - BIP39=${BIP39}
       - SLACK_APP_SECRET=${SLACK_APP_SECRET}
     ports:
-     - 5000:5000
+     - 8000:8000
