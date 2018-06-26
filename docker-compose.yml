@@ -6,7 +6,7 @@ services:
       - SITE=${SITE}
       - VERIFICATION_TOKEN=${VERIFICATION_TOKEN}
       - DATABASE_URL=${DATABASE_URL}
-      - SECRET_KEY=${SECRET_KEY}
+      - BIP39=${BIP39}
       - SLACK_APP_SECRET=${SLACK_APP_SECRET}
     ports:
      - 5000:5000

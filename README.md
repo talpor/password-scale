@@ -85,4 +85,4 @@ Done! now you will need to register your server in Slack, using the command `/pa
 | ONETIMESECRET_KEY | Your One-Time Secret API key |
 | ONETIMESECRET_USER | Your One-Time Secret user name |
 | PASSWORD_STORAGE | Unique name for your password storage bucket |
-| SECRET_KEY | This is a 32 bytes string (at least) used as seed to generate the server private and public key, you can use a command like `openssl rand -base64 32` to create it |
+| BIP39 | Mnemonic code for generating deterministic keys, specification: https://github.com/bitcoin/bips/blob/master/bip-0039.mediawiki |

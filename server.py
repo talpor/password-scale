@@ -23,7 +23,7 @@ ONETIMESECRET_USER = os.environ.get('ONETIMESECRET_USER')
 PASSWORD_STORAGE = os.environ.get('PASSWORD_STORAGE')
 AWS_S3_REGION = os.environ.get('AWS_S3_REGION', 'us-east-1')
 
-secret_key = generate_key(os.environ.get('SECRET_KEY'))
+secret_key = generate_key(os.environ.get('BIP39'))
 private_key = secret_key.exportKey("PEM")
 public_key = secret_key.publickey().exportKey("PEM")
 

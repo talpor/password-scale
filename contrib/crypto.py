@@ -22,9 +22,10 @@ def decrypt(encrypted_message, private_key):
         return None
 
 
-def generate_key(first_key):
+def generate_key(seed):
+    # TODO: assert seed is a valid bit39 phrase
     seed_128 = HMAC.new(
-        bytes(first_key, 'utf-8') + b'Application: 2nd key derivation'
+        bytes(seed, 'utf-8') + b'Application: 2nd key derivation'
     ).digest()
 
     class PRNG(object):
