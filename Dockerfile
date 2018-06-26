@@ -16,7 +16,7 @@ RUN node --version
 RUN npm --version
 
 RUN npm install -g babel-cli
-RUN npm install -g sass
+RUN npm install -g node-sass
 RUN npm install -g yarn
 
 WORKDIR /app
