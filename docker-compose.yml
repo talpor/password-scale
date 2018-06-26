@@ -1,0 +1,12 @@
+version: '3'
+services:
+  web:
+    build: .
+    environment:
+      - SITE=${SITE}
+      - VERIFICATION_TOKEN=${VERIFICATION_TOKEN}
+      - DATABASE_URL=${DATABASE_URL}
+      - SECRET_KEY=${SECRET_KEY}
+      - SLACK_APP_SECRET=${SLACK_APP_SECRET}
+    ports:
+     - 5000:5000
