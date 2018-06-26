@@ -1,10 +1,11 @@
 {
   "AWSEBDockerrunVersion": "1",
-  "Volumes": [
+  "Ports": [
     {
-      "ContainerDirectory": "/var/app",
-      "HostDirectory": "/var/app"
+      "ContainerPort": "8000"
+    },
+    {
+      "ContainerPort": "5432"
     }
-  ],
-  "Logging": "/var/eb_log"
+  ]
 }
