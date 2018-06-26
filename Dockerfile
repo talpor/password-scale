@@ -1,4 +1,4 @@
-FROM python:3.4-alpine
+FROM python:3.6-alpine
 
 COPY . /app
 
@@ -12,12 +12,9 @@ RUN apk add \
     postgresql-dev \
     python-dev
 
-RUN node --version
-RUN npm --version
-
-RUN npm install -g babel-cli
-RUN npm install -g node-sass
 RUN npm install -g yarn
+RUN yarn global add babel-cli
+RUN yarn global add node-sass
 
 WORKDIR /app
 RUN pip install -r requirements.txt
