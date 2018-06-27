@@ -3,6 +3,7 @@ from diskcache import Cache
 from flask import Flask, abort, render_template, request
 from flask_assets import Environment, Bundle
 from flask_sqlalchemy import SQLAlchemy
+from raven.contrib.flask import Sentry
 from urllib.parse import urlparse, urlunparse, urlencode
 
 from contrib.crypto import generate_key, encrypt
@@ -28,6 +29,8 @@ application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 assets = Environment(application)
 cache = Cache('/tmp/tokencache')
+sentry = Sentry(application, dsn=os.environ.get('SENTRY_DSN'))
+
 cmd = PasswordScaleCMD(cache, private_key)
 db = SQLAlchemy(application)
 
@@ -188,6 +191,7 @@ def slack_oauth():
     )
     response = requests.get(oauth_access_url).json()
     if 'ok' not in response or not response['ok']:
+        sentry.captureMessage(response)
         abort(403)
 
     team_id = response['team_id']

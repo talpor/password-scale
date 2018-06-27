@@ -8,5 +8,6 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - BIP39=${BIP39}
       - SLACK_APP_SECRET=${SLACK_APP_SECRET}
+      - SENTRY_DSN=${SENTRY_DSN}
     ports:
      - 8000:8000
