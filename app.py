@@ -37,6 +37,7 @@ db = SQLAlchemy(application)
 all_css = Bundle(
     'css/base.scss',
     'css/insert.scss',
+    'css/privacy.scss',
     filters='node-scss',
     output='dist/all.css'
 )

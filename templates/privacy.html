@@ -1,13 +1,10 @@
 {% extends "base.html" %}
-{% block title %}Password Scale{% endblock %}
-{% block meta %}
-<meta name="slack-app-id" content="ABA2S1PHD">
-{% endblock %}
+{% block title %}Password Scale - Privacy Policy{% endblock %}
 {% block content %}
-<div class="container">
+<div id="Privacy" class="container">
     <h1>Privacy Policy</h1>
 
-    <h2>Last updated: Jun 21, 2018</h2>
+    <h2>Last updated: Jun 27, 2018</h2>
 
     <p>This privacy policy describes our commitment to preserving the security of your Personal Data, your privacy, and your rights to your Personal Data. It is written in plain language because we want to communicate this to you. It therefore lacks some of the precision that a document drafted by and for legal professionals would have, but it still represents our good faith effort at describing what we and you agree to when you entrust us with your data.</p>
 
@@ -15,25 +12,28 @@
     <p>We believe that the less information we know about you, the better. After all, it is impossible to lose, misuse, or abuse information we don’t have. To the extent that we have control over your data or data about you, we see ourselves as custodians of that data on your behalf.</p>
 
     <h2>Information We Keep and How We Use It</h2>
-    <p>WIP</p>
+    <p>We only store information to identify your team (specifically the Slack team id) and the url of your password server, this information is used to comunicate the passwords requests with the respective password server.</p>
+    <p>We do not store any personal information or usage information.</p>
 
     <h2>Your Responsibilities for Protecting Your Data</h2>
-    <p>WIP</p>
+    <p>When you create a password server you will create it with a BIP39 seed. Your BIP39 seed is created by yourself.</p>
+    <p>It is extremely important that you understand that anyone with your BIP39 seed will be able to generate your secret and master keys and can access your Secure Data. It is equally important that you keep a copy in a safe place for your own reference, because future access to your Secure Data depends on having it. We will never ask you for your seed, and you should never send either to anyone.</p>
+    <p>Due to the nature of our design and the sensitivity of the information you entrust to us (even in encrypted form), it may not be possible for us to help you with certain customer service requests.</p>
 
     <h2>Data Portability</h2>
-    <p>WIP</p>
+    <p>You are the owner of your data, whenever this data is in Amazon S3 service owned by you. You are free to move or delete this data in any moment and you are also able to decrypt it by generating your private and public key from your BIP39 seed.</p>
 
     <h2>Your Right to Knowing to What We Know</h2>
     <p>You have the right to know what we know about you and to see how that data is handled. You may request a screenshot of what we can see about you in our back office systems. However, to protect customer privacy, such requests must be carefully authenticated beyond demonstrating control of the customer’s email address.</p>
 
     <h2>Your Right to Have Your Data Erased</h2>
-    <p>WIP</p>
+    <p>As long as we only store your team id and server URL, you can request in any time that we delete this data permanently and after seven days this data will leave also the backups.</p>
 
     <h2>Cookies and Tracking</h2>
     <p>We do not engage in or support cross-service tracking.</p>
     <p>We do set and use cookies (small text files placed on your device) on our own domains and subdomains to store settings that assist with identifying your account for sign-in. We also use third party analytics packages for our public pages that may set cookies on your computer. These are limited to our domains, and do not involve cross-service tracking.</p>
 
     <h2>Updates to our Privacy Policy</h2>
-    <p>At our discretion, we may make changes to this Policy and note the date of the last revision. You should check here frequently if you need to know of updates to our Privacy Policy. We maintain the right to send you annoying email informing you of substantive changes. Previous versions will be made available from this page.</p>
+    <p class="last_p">At our discretion, we may make changes to this Policy and note the date of the last revision. You should check here frequently if you need to know of updates to our Privacy Policy.</p>
 </div>
 {% endblock %}
