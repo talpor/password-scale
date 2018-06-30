@@ -72,7 +72,7 @@ In order to be efficient with the resource management and facilitate the deploy 
 - Modify _"s3_bucket"_ and _"environment_variables"_ variables in the new _zappa_settings.json_ file, replacing each value for your owns (for the _"environment_variables"_ see the table below)
 - Deploy your server `zappa deploy`
 
-Done! now you will need to register your server in Slack, using the command `/pass register <new_server_url>` to retrieve your server URL use the command `zappa status` and check the _API Gateway URL_.
+Done! now you will need to register your server in Slack, using the command `/pass register <new_server_url>` to retrieve your server URL use the command `zappa status` and check the _API Gateway URL_. If you have any error using the command after configuration use `zappa tail` command to retrieve the server logs.
 
 ### Environment variables table
 

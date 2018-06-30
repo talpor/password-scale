@@ -1,6 +1,7 @@
 from datetime import datetime
 from diskcache import Cache
 from flask import Flask, abort, render_template, request
+from flask import jsonify
 from flask_assets import Environment, Bundle
 from flask_sqlalchemy import SQLAlchemy
 from raven.contrib.flask import Sentry
@@ -8,16 +9,19 @@ from urllib.parse import urlparse, urlunparse, urlencode
 
 from contrib.crypto import generate_key, encrypt
 from password_scale import PasswordScaleCMD, PasswordScaleError
+from utils import warning, error, success, info
 
+import json
 import os
 import re
 import requests
 import validators
 
+DEMO_SERVER = os.environ.get('DEMO_SERVER')
 SITE = os.environ.get('SITE')
-VERIFICATION_TOKEN = os.environ.get('VERIFICATION_TOKEN')
-SLACK_APP_SECRET = os.environ.get('SLACK_APP_SECRET')
 SLACK_APP_ID = os.environ.get('SLACK_APP_ID', '2554558892.385841792964')
+SLACK_APP_SECRET = os.environ.get('SLACK_APP_SECRET')
+VERIFICATION_TOKEN = os.environ.get('VERIFICATION_TOKEN')
 
 secret_key = generate_key(os.environ.get('BIP39'))
 private_key = secret_key.exportKey("PEM")
@@ -72,9 +76,76 @@ class Team(db.Model):
         return 'Slack team: {}'.format(self.team_id)
 
 
+def _register_server(url, team):
+    team.url = url
+    try:
+        response = requests.get(team.api('public_key'))
+    except requests.exceptions.ConnectionError:
+        return False
+
+    if response.status_code != requests.codes.ok:
+        return False
+
+    team.public_key = response.text
+    db.session.commit()
+    return True
+
+
 @application.route('/public_key', methods=['GET'])
 def get_public_key():
     return public_key
+
+
+@application.route('/slack/action', methods=['POST'])
+def action_api():
+    data = request.values.to_dict()
+    payload = json.loads(data['payload'])
+    if payload['token'] != VERIFICATION_TOKEN:
+        return abort(404)
+
+    if 'actions' not in payload:
+        return 'not implemented'
+
+    option = payload['actions'][0]
+    action = option['name']
+
+    if payload['callback_id'] == 'configure_password_server':
+        if action == 'no_reconfigure':
+            return info('Password server unchanged.')
+
+        elif action == 'no_configure':
+            return success(
+                'Sure! for more information about the pass command working '
+                'check `/pass help` and the source code in https://github.com/'
+                'talpor/password-scale/'
+            )
+
+        team = db.session.query(Team).filter_by(
+            team_id=payload['team']['id']).first()
+
+        if action == 'reconfigure_server':
+            if not validators.url(option['value']):
+                return error('Invalid URL format, use: https://<domain>')
+
+            if not _register_server(option['value'], team):
+                return error(
+                    'Unable to retrieve the _public_key_ '
+                    'from the server'.format(payload['team']['domain'])
+                )
+            return success('Password server successfully updated!')
+
+        elif action == 'use_demo_server':
+            if not _register_server(DEMO_SERVER, team):
+                return error(
+                    'An error occurred registering the server, '
+                    'please try later.'
+                )
+            return success(
+                'The testing server is already configured! remember that '
+                'the data on this server can be deleted without prior '
+                'notice, when you want to configure your final server '
+                'you should only execute the command `/pass register` again.'
+            )
 
 
 @application.route('/slack/command', methods=['POST'])
@@ -90,49 +161,226 @@ def api():
         return abort(404)
 
     team = db.session.query(Team).filter_by(team_id=team_id).first()
+    if not team:
+        return error(
+            'You are not registered in our proxy server, try removig the app '
+            'and adding it to slack again.'
+        )
 
     if command[0] == 'help':
-        return 'WIP: https://github.com/talpor/password-scale'
+        fields = [
+            {
+                'title': '`/pass` _or_ `/pass list`',
+                'value': 'To list the available passwords in this channel.',
+                'short': True
+            },
+            {
+                'title': '`/pass <secret>` or `/pass show <secret>`',
+                'value': (
+                    'To retrieve a one time use link with the secret content, '
+                    'this link expires in 15 minutes.'
+                ),
+                'short': True
+            },
+            {
+                'title': '`/pass <secret>`',
+                'value': (
+                    'To retrieve a one time use link with the secret content, '
+                    'this link expires in 15 minutes.'
+                ),
+                'short': True
+            },
+            {
+                'title': '`/pass insert <secret>`',
+                'value': (
+                    'To retrieve the link with the editor to create the '
+                    'secret, this link expires in 15 minutes.'
+                ),
+                'short': True
+            },
+            {
+                'title': '`/pass remove <secret>`',
+                'value': (
+                    'To make unreachable the secret, to complete deletion is '
+                    'necessary doing it manually from the s3 password storage.'
+                ),
+                'short': True
+            },
+            {
+                'title': '`/pass register <password_server_url>`',
+                'value': (
+                    'To setup the password storage, it is only necessary '
+                    'to execute it once.'
+                ),
+                'short': True
+            }
+        ]
+        return jsonify({
+            'attachments': [
+                {
+                    'fallback': (
+                        '_Usage:_ https://github.com/talpor/password-scale'
+                    ),
+                    'text': '*_Usage:_*',
+                    'fields': fields
+                }
+            ]
+        })
 
     if command[0] == 'register' and len(command) == 2:
         url = command[1]
         if not validators.url(url):
-            return 'Invalid URL format, use: https://<domain>'
+            return error('Invalid URL format, use: https://<domain>')
 
-        team.url = url
-        response = requests.get(team.api('public_key'))
+        if team.url:
+            msg = ('This team is already registered, you want to replace '
+                   'the password server?')
+            return jsonify({
+                'attachments': [
+                    {
+                        'fallback': 'This team already registered',
+                        'text': msg,
+                        'callback_id': 'configure_password_server',
+                        'color': 'warning',
+                        'actions': [
+                            {
+                                'name': 'reconfigure_server',
+                                'text': 'Yes',
+                                'type': 'button',
+                                'value': url
+                            },
+                            {
+                                'name': 'no_reconfigure',
+                                'text': 'No',
+                                'style': 'danger',
+                                'type': 'button',
+                                'value': 'no'
+                            },
+                        ]
+                    }
+                ]
+            })
 
-        if response.status_code != requests.codes.ok:
-            return ('Unable to retrieve the public_key '
-                    'from the server').format(team_domain)
+        if not _register_server(url, team):
+            return error(
+                'Unable to retrieve the _public_key_ '
+                'from the server'.format(team_domain)
+            )
 
-        team.public_key = response.text
-        db.session.commit()
-
-        return '{} team successfully registered!'.format(team_domain)
+        return success('{} team successfully registered!'.format(team_domain))
 
     if not team.url:
-        return ('{} team does not have a password server registered, use '
-                'the command `/pass register https://your.password.server` '
-                'to start, check the configuration guide -> '
-                'https://github.com/talpor/password-scale/blob/master'
-                '/README.md').format(team_domain)
+        msg = (
+            '*{}* team does not have a password server registered, use '
+            'the command `/pass register https://your.password.server` '
+            'to configure yours.'.format(team_domain)
+        )
+        warning_msg = (
+            'The idea of the testing server is that you be able to try '
+            'the _Password Scale_ command working. For daily use among '
+            'the team members is necessary to configure your own. '
+            '*Any information stored on this server can be deleted at '
+            'any moment without prior notice!*'
+        )
+        return jsonify({
+            'attachments': [
+                {
+                    'fallback': msg,
+                    'text': msg,
+                    'color': 'warning',
+                    'callback_id': 'configure_password_server',
+                    'actions': [
+                        {
+                            'text': 'Check the configuration guide',
+                            'type': 'button',
+                            'url': ('https://github.com/talpor/'
+                                    'password-scale/blob/master/README.md')
+                        },
+                        {
+                            'name': 'use_demo_server',
+                            'text': 'Use testing server',
+                            'type': 'button',
+                            'value': 'no',
+                            'confirm': {
+                                'title': 'Are you sure?',
+                                'text': warning_msg,
+                                'ok_text': 'I understand',
+                                'dismiss_text': 'No'
+                            }
+                        },
+                        {
+                            'name': 'no_configure',
+                            'text': 'Later',
+                            'type': 'button',
+                            'value': 'no'
+                        }
+                    ]
+                }
+            ]
+        })
+        return warning(
+            '{} team does not have a password server registered, use '
+            'the command `/pass register https://your.password.server` '
+            'to start, check the configuration guide -> '
+            'https://github.com/talpor/password-scale/blob/master'
+            '/README.md'.format(team_domain)
+        )
 
     if command[0] in ['', 'list']:
-        dir_ls = cmd.list(team, channel)
-        return '```{}```'.format(dir_ls)
+        try:
+            dir_ls = cmd.list(team, channel)
+        except PasswordScaleError as e:
+            return error('_{}_'.format(e.message))
+
+        if not dir_ls:
+            return warning(
+                'You have not passwords created for this channel, use '
+                '`/pass insert <secret>` to create the first one!'
+            )
+
+        return jsonify({
+            'attachments': [
+                {
+                    'fallback': dir_ls,
+                    'text': 'Password Store\n{}'.format(dir_ls),
+                    'footer': (
+                        'Use the command `/pass show <key_name>` to retrieve '
+                        'some of the keys'
+                    )
+                }
+            ]
+        })
+        return info('Password Store\n{}'.format(dir_ls))
 
     if command[0] == 'insert' and len(command) == 2:
         app = command[1]
         valid_path = cmd.generate_insert_token(team, channel, app)
-        return 'Add _{}_ password in: {}/insert/{}'.format(
-            app, SITE, valid_path)
+
+        msg = 'Adding password for *{}* in this channel'.format(app)
+        return jsonify({
+            'attachments': [
+                {
+                    'fallback': msg,
+                    'text': msg,
+                    'footer': 'This editor will be valid for 15 minutes',
+                    'color': 'good',
+                    'actions': [
+                        {
+                            'text': 'Open editor',
+                            'style': 'primary',
+                            'type': 'button',
+                            'url': '{}/insert/{}'.format(SITE, valid_path)
+                        }
+                    ]
+                }
+            ]
+        })
 
     if command[0] == 'remove' and len(command) == 2:
         app = command[1]
         valid_path = cmd.remove(team, channel, app)
-        return ('Now the password _{}_ is unreachable, to complete removal '
-                'contact the system administrator.').format(app)
+        return success('Now the password *{}* is unreachable, to complete '
+                       'removal contact the system administrator.'.format(app))
 
     if command[0] == 'show' and len(command) == 2:
         app = command[1]
@@ -141,9 +389,26 @@ def api():
 
     onetime_link = cmd.show(team, channel, app)
     if onetime_link:
-        return 'Password for _{}_: {}'.format(app, onetime_link)
+        return jsonify({
+            'attachments': [
+                {
+                    'fallback': 'Password: {}'.format(onetime_link),
+                    'text': 'Password for *{}*'.format(app),
+                    'footer': 'This secret will be valid for 15 minutes',
+                    'color': 'good',
+                    'actions': [
+                        {
+                            'text': 'Open secret',
+                            'style': 'primary',
+                            'type': 'button',
+                            'url': onetime_link
+                        }
+                    ]
+                }
+            ]
+        })
     else:
-        return '_{}_ is not in the password store.'.format(app)
+        return warning('*{}* is not in the password store.'.format(app))
 
 
 @application.route('/insert/<token>', methods=['GET', 'POST'])

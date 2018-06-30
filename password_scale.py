@@ -22,11 +22,11 @@ class PasswordScaleCMD(object):
 
         msg = decrypt(response.text, self.private_key)
         if msg == b'':
-            return '<empty>'
+            return ''
         elif msg is None:
             raise PasswordScaleError('Decryption error')
 
-        return msg.decode('utf-8').replace('{}/'.format(channel), '├── ')
+        return msg.decode('utf-8').replace('{}/'.format(channel), '├─ ')
 
     def generate_insert_token(self, team, channel, app):
         token = ''.join(random.SystemRandom().choice(

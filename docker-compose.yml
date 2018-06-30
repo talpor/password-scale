@@ -3,6 +3,7 @@ services:
   web:
     build: .
     environment:
+      - DEMO_SERVER=${DEMO_SERVER}
       - SITE=${SITE}
       - VERIFICATION_TOKEN=${VERIFICATION_TOKEN}
       - DATABASE_URL=${DATABASE_URL}
