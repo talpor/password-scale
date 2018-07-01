@@ -8,7 +8,7 @@ from raven.contrib.flask import Sentry
 from urllib.parse import urlparse, urlunparse, urlencode
 
 from contrib.crypto import generate_key, encrypt
-from password_scale import PasswordScaleCMD, PasswordScaleError
+from password_scale.core import PasswordScaleCMD, PasswordScaleError
 from utils import warning, error, success, info
 
 import json
@@ -344,7 +344,7 @@ def api():
                     'fallback': dir_ls,
                     'text': 'Password Store\n{}'.format(dir_ls),
                     'footer': (
-                        'Use the command `/pass show <key_name>` to retrieve '
+                        'Use the command `/pass <key_name>` to retrieve '
                         'some of the keys'
                     )
                 }
@@ -490,6 +490,11 @@ def landing():
 @application.route('/privacy', methods=['GET'])
 def privacy():
     return render_template('privacy.html')
+
+
+@application.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 if __name__ == '__main__':
