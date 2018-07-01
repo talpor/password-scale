@@ -1,0 +1,129 @@
+@import 'vars';
+
+$header-text-color: $lighter-gray;
+
+#Landing {
+    .container {
+        width: 960px;
+        width: 1080px;
+    }
+    .flex {
+        display: flex;
+    }
+    header {
+        margin: 0;
+        background-color: $blue;
+        background-image: linear-gradient(to right bottom, #1a5185, #164f85, #114c85, #0c4a84, #074784);
+        color: $header-text-color;
+        font-size: 1.2em;
+        .col {
+            flex: 2;
+            height: 464px;
+            &.bg {
+                flex: 3;
+                background-image: url('/static/img/bg.png');
+                background-size: 100%;
+                background-repeat: no-repeat;
+            }
+            &.main {
+                text-align: center;
+                h1 {
+                    margin: 80px 0 20px 0;
+                    color: $header-text-color
+                }
+            }
+            .slack-button {
+                margin-top: 30px;
+                a {
+                    display: block;
+                }
+            }
+        }
+    }
+    .features {
+        padding: 50px 0;
+        text-align: center;
+        h2 {
+            height: 95px;
+        }
+        .col {
+            flex: 1;
+        }
+        .col1 {
+            padding-right: 5px;
+        }
+        .col2 {
+            padding: 0 5px;
+        }
+        .col1 {
+            padding-left: 5px;
+        }
+    }
+    .command {
+        padding: 30px 0;
+        background-color: $lighter-gray;
+        .col {
+            flex: 1;
+        }
+        .row {
+            margin-top: 20px;
+            height: 100px;
+            padding-right: 10px;
+            p {
+                margin-top: 10px;
+            }
+        }
+        code {
+            font-size: 0.9em;
+        }
+    }
+    .how-it-works {
+        padding: 30px 0;
+        p {
+            padding: 12px 0;
+        }
+        ul {
+            list-style: initial;
+            padding-left: 30px;
+            line-height: 1.5;
+            margin: 9px 0;
+        }
+        code {
+            font-size: 0.8em;
+        }
+    }
+    .server {
+        text-align: center;
+        font-size: 1.1em;
+        background-color: $lighter-gray;
+        .container {
+            padding: 50px 0;
+            width: 960px;
+        }
+        a {
+            font-weight: bold;
+            color: black;
+            text-decoration: underline;
+        }
+    }
+    footer {
+        height: 50px;
+        background-color: $blue;
+        font-size: 0.7em;
+        a {
+            color: white;
+        }
+        ul {
+            margin-top: 10px;
+            float: left;
+            li {
+                display: inline-block;
+                padding-right: 5px;
+            }
+        }
+        .copy {
+            float: right;
+            margin-top: 10px;
+        }
+    }
+}

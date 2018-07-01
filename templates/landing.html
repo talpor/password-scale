@@ -4,12 +4,36 @@
 <meta name="slack-app-id" content="ABBQRPAUC">
 {% endblock %}
 {% block content %}
-<div class="container">
-    <h1>Password Scale</h1>
-    <p>Is a Slack command to manage shared passwords between the members of a channel in Slack.</p>
-
-    <a href="https://github.com/talpor/password-scale" target="blank"><i class="fab fa-github"></i></a>
-
-    <a href="{{authorize_url}}"><img alt="Add to Slack" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
+<div id="Landing">
+    <header>
+        {% include 'landing/_header.html' %}
+    </header>
+    <div class="container features">
+        {% include 'landing/_features.html' %}
+    </div>
+    <div class="command">
+        <div class="container">
+            <h3>Slack command ussage:</h3>
+            {% include 'landing/_usage.html' %}
+        </div>
+    </div>
+    <div class="how-it-works container">
+        {% include 'landing/_how.html' %}
+    </div>
+    <div class="server">
+        <div class="container">
+            <p>Go to our <a href="https://github.com/talpor/password-scale" target="blank">github project</a> for instructions on how to set up your own password server, also you can try the command on your Slack team using our test server</p>
+        </div>
+    </div>
+    <footer>
+        <div class="container">
+            <ul>
+                <li><a href="/privacy">Privacy</a></li>
+                <li><a href="https://github.com/talpor/password-scale" target="blank">GitHub</a></li>
+                <li><a href="mailto:4i84hsnd82jy@opayq.com" target="blank">Contact</a></li>
+            </ul>
+            <a class="copy" href="https://talpor.com" target="blank">© 2018 Talpor</a>
+        </div>
+    </footer>
 </div>
 {% endblock %}

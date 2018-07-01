@@ -39,8 +39,10 @@ cmd = PasswordScaleCMD(cache, private_key)
 db = SQLAlchemy(application)
 
 all_css = Bundle(
+    'css/reset.scss',
     'css/base.scss',
     'css/insert.scss',
+    'css/landing.scss',
     'css/privacy.scss',
     filters='node-scss',
     output='dist/all.css'
@@ -432,7 +434,8 @@ def insert(token):
         except PasswordScaleError as e:
             abort(e.message)
 
-        return render_template('success.html')
+        message = ('Your secret was securely stored!')
+        return render_template('success.html', message=message)
 
     else:
         return render_template(
@@ -464,15 +467,16 @@ def slack_oauth():
 
     if not db.session.query(Team).filter_by(team_id=team_id).first():
         # deliberately does not store the `access_token` may be will be useful
-        # for a future feature but right now it is not necessary :thinking_face:
+        # for a future feature but right now it is not necessary
         new_team = Team(
             team_id=response['team_id'],
             # access_token=response.json()['access_token'],
         )
         db.session.add(new_team)
         db.session.commit()
-
-    return render_template('success.html')
+    message = ('The Slack application was installed successfully, go to your '
+               'Slack group and try it!')
+    return render_template('success.html', message=message)
 
 
 @application.route('/', methods=['GET'])

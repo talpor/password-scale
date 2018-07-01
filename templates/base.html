@@ -10,14 +10,6 @@
 </head>
 <body>
 <div id="HeadingLine"></div>
-<header>
-    <div class="container">
-        <img class="logo" src="{{ url_for('static', filename='img/logo.png') }}" alt="scale-logo">
-        <div class="links">
-            <a href="/" target="blank">About</a>
-        </div>
-    </div>
-</header>
 {% block content %}{% endblock %}
 {% block scripts %}{% endblock %}
 </body>

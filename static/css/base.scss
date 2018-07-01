@@ -1,5 +1,4 @@
 @import 'vars';
-@import 'reset';
 
 body {
     font-family: $serif, serif;
@@ -54,5 +53,10 @@ body {
         background: #f9f9f9;
         color: #a9a9a9;
         cursor: default;
+    }
+    .success {
+        h1 {
+            margin: 20px 0 15px 0;
+        }
     }
 }

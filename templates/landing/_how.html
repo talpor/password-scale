@@ -1,0 +1,38 @@
+<h3>How it work?</h3>
+
+<p>Been <i>Alice</i> and <i>Bob</i> members of the same Slack group, they need to share the password of the service <i>Bar</i>. This is the process that they need to follow to share it. In this example <i>Alice</i> will create the secret and <i>Bob</i> will consult it.</p>
+
+<h4>Creating a secret</h4>
+
+<ul>
+    <li><i><b>Alice:</b></i> Requests a link to create the secret (<code>/pass insert Bar</code>)</li>
+    <li><i>Proxy Server:</i> Generates an unique editor link, valid for 15 minutes</li>
+    <li><i>Slack:</i> Shows the editor link, only visible for Alice</li>
+    <li><i><b>Alice:</b></i> Follows the link</li>
+    <li><i>Proxy Server:</i> Requests the the public key to the <i>Password Server</i> and send it to the editor</li>
+    <li><i>Editor:</i> Displays itself in Alice's browser</li>
+    <li><i><b>Alice:</b></i> Writes the shared secret</li>
+    <li><i><b>Alice:</b></i> Press the "Create" button</li>
+    <li><i>Editor:</i> Encrypts the secret before sending the request</li>
+    <li><i>Editor:</i> Sends the request to the <i>Proxy Server</i></li>
+    <li><i>Proxy Server:</i> Sends the encrypted secret to the <i>Password Server</i> (note that this secret is indecipherable for this server)</li>
+    <li><i>Password Server:</i> Stores the encrypted secret in the configured S3 bucket.</li>
+</ul>
+
+<p><b>Note:</b> <i>Editor</i> and <i>Proxy Server</i> are the same server, but <i>Editor</i> represents the frontend view.</p>
+
+<h4>Retrieving a secret</h4>
+
+<ul>
+    <li><i><b>Bob:</b></i> Requests a link to see the secret (<code>/pass Bar</code> or <code>/pass show Bar</code>)</li>
+    <li><i>Proxy Server:</i> Requests the secret to the password server using the Slack team name and channel id</li>
+    <li><i>Password server:</i> Reads and decrypt the secret</li>
+    <li><i>Password server:</i> Generates one time use link with the secret, valid for 15 minutes (using One-Time Secret API)</li>
+    <li><i>Password server:</i> Encrypts the link with the <i>Proxy Server</i> public key</li>
+    <li><i>Password server:</i> Sends the encrypted link to the <i>Proxy Server</i></li>
+    <li><i>Proxy server:</i> Decrypts the one time use link</li>
+    <li><i>Proxy server:</i> Sends the link to Slack</li>
+    <li><i>Slack:</i> Shows the link only visible for Bob</li>
+    <li><i><b>Bob:</b></i> Follows the link</li>
+    <li><i>Onetimesecret:</i> Shows and destroys the secret</li>
+</ul>
