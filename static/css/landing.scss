@@ -126,4 +126,41 @@ $header-text-color: $lighter-gray;
             margin-top: 10px;
         }
     }
+    .contact-form {
+        .container {
+            width: 600px;
+            h4 {
+                margin-top: 20px;
+            }
+            form {
+                margin: 0 0 30px 0;
+                input, textarea {
+                    margin-top: 10px;
+                    line-height: 2;
+                    padding-left: 10px;
+                    width: 100%;
+                    background-color: $lighter-gray;
+                    border: 1px solid $light-gray;
+                    &:focus {
+                        outline: none !important;
+                        border:1px solid $orange;
+                        box-shadow: 0 0 10px $light-gray;
+                    }
+                }
+                textarea {
+                    padding-top: 5px;
+                    margin: 10px 0;
+                    line-height: 1.5;
+                    resize: vertical;
+                }
+                button {
+                    text-transform: uppercase;
+                    border: 2px solid $blue;
+                    color: $blue;
+                    background: transparent;
+                    padding: 0.6em 0.9em;
+                }
+            }
+        }
+    }
 }
