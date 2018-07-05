@@ -1,5 +1,7 @@
 # Password Scale
 
+[![Build Status](https://travis-ci.org/talpor/password-scale.svg?branch=master)](https://travis-ci.org/talpor/password-scale)
+
 Is a Slack command to manage shared passwords between the members of a channel in Slack.
 
 This project was build focused in establishing a communication where the trustness between parties is not required, using the asymmetric algorithm RSA to share encrypted information point to point and where the only participant allowed to read the stored passwords is the _Password Server_, who is different and independent for each client.
