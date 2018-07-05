@@ -57,8 +57,8 @@ class PasswordScaleCMD(object):
             data={'channel': channel, 'app': app})
 
         if response.status_code != requests.codes.ok:
-            raise PasswordScaleError(
-                'Error {}: {}'.format(response.status_code, ERRMSG))
+            return False
+        return True
 
     def show(self, team, channel, app):
         response = requests.post(

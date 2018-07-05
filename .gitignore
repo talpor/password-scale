@@ -1,6 +1,7 @@
 *__pycache__*
 *.env
 *.db
+.pytest_cache*
 zappa_settings.json
 
 # Compiled assets

@@ -153,13 +153,16 @@ def action_api():
 @application.route('/slack/command', methods=['POST'])
 def api():
     data = request.values.to_dict()
-    command = re.split('\s+', data['text'])
-    team_id = data['team_id']
-    team_domain = data['team_domain']
-    channel = data['channel_id']
+    try:
+        command = re.split('\s+', data['text'])
+        team_id = data['team_id']
+        team_domain = data['team_domain']
+        channel = data['channel_id']
+    except KeyError:
+        abort(400)
 
     # ensuring that the request comes from slack
-    if data['token'] != VERIFICATION_TOKEN:
+    if 'token' not in data or data['token'] != VERIFICATION_TOKEN:
         return abort(404)
 
     team = db.session.query(Team).filter_by(team_id=team_id).first()
@@ -327,7 +330,6 @@ def api():
             'https://github.com/talpor/password-scale/blob/master'
             '/README.md'.format(team_domain)
         )
-
     if command[0] in ['', 'list']:
         try:
             dir_ls = cmd.list(team, channel)
@@ -356,7 +358,7 @@ def api():
 
     if command[0] == 'insert' and len(command) == 2:
         app = command[1]
-        valid_path = cmd.generate_insert_token(team, channel, app)
+        token = cmd.generate_insert_token(team, channel, app)
 
         msg = 'Adding password for *{}* in this channel'.format(app)
         return jsonify({
@@ -371,7 +373,7 @@ def api():
                             'text': 'Open editor',
                             'style': 'primary',
                             'type': 'button',
-                            'url': '{}/insert/{}'.format(SITE, valid_path)
+                            'url': '{}/insert/{}'.format(SITE, token)
                         }
                     ]
                 }
@@ -380,9 +382,15 @@ def api():
 
     if command[0] == 'remove' and len(command) == 2:
         app = command[1]
-        valid_path = cmd.remove(team, channel, app)
-        return success('Now the password *{}* is unreachable, to complete '
-                       'removal contact the system administrator.'.format(app))
+        if cmd.remove(team, channel, app):
+            return success(
+                'Now the password *{}* is unreachable, to complete '
+                'removal contact the system administrator.'.format(app)
+            )
+        return warning(
+            'Looks like this secret is not in your repository '
+            ':thinking_face: use the list command `pass list {}` '
+            'to verify your storage.'.format(app))
 
     if command[0] == 'show' and len(command) == 2:
         app = command[1]
