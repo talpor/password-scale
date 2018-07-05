@@ -1,15 +1,17 @@
 from mocks import RequestsMock, PasswordScaleCMDMock
-from fixtures import client_fixture, RequestData, VERIFICATION_TOKEN, SITE, app
+from fixtures import (
+    client_fixture, RequestData, VERIFICATION_TOKEN, SITE, server
+)
 
 requests_mock = RequestsMock()
-password_scale_cmd_mock = PasswordScaleCMDMock(app)
+password_scale_cmd_mock = PasswordScaleCMDMock(server)
 
 client = client_fixture
 
 
 def test__public_key_endpoint(client):
     rv = client.get('/public_key')
-    assert rv.data == app.public_key
+    assert rv.data == server.public_key
 
 
 def test__api_endpoint__require_post(client):

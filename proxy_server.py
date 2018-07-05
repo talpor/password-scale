@@ -8,8 +8,8 @@ from raven.contrib.flask import Sentry
 from urllib.parse import urlparse, urlunparse, urlencode
 
 from contrib.crypto import generate_key, encrypt
+from contrib.slack import warning, error, success, info
 from password_scale.core import PasswordScaleCMD, PasswordScaleError
-from utils import warning, error, success, info
 
 import json
 import os

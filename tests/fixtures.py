@@ -21,18 +21,18 @@ os.environ['SLACK_APP_SECRET'] = '11111111111111111111111111111111'
 os.environ['VERIFICATION_TOKEN'] = VERIFICATION_TOKEN
 
 sys.path.insert(0, '')
-import app  # noqa
+import proxy_server as server  # noqa
 
 requests_mock = RequestsMock()
 
 
 @pytest.fixture
 def client_fixture():
-    app.application.config['TESTING'] = True
-    client = app.application.test_client()
+    server.application.config['TESTING'] = True
+    client = server.application.test_client()
 
-    with app.application.app_context():
-        app.db.create_all()
+    with server.application.app_context():
+        server.db.create_all()
 
     yield client
 
@@ -44,9 +44,9 @@ class RequestData(object):
         self.team_id = ''.join(
             random.choices(string.ascii_uppercase + string.digits, k=9))
 
-        new_team = app.Team(team_id=self.team_id)
-        app.db.session.add(new_team)
-        app.db.session.commit()
+        new_team = server.Team(team_id=self.team_id)
+        server.db.session.add(new_team)
+        server.db.session.commit()
 
         if register:
             if self.client is None:
