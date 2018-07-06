@@ -26,8 +26,12 @@ class PasswordScaleCMD(object):
         elif msg is None:
             raise PasswordScaleError('Decryption error')
 
-        # TODO: use `└─` symbol for the last occurrence
-        return msg.decode('utf-8').replace('{}/'.format(channel), '├─ ')
+        item_list = msg.decode('utf-8')
+        n = item_list.count(channel)
+        # formatting response
+        return item_list.replace(
+            '{}/'.format(channel), '├─ ', n-1).replace(
+            '{}/'.format(channel), '└─ ')
 
     def generate_insert_token(self, team, channel, app):
         token = ''.join(random.SystemRandom().choice(
