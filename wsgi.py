@@ -1,4 +1,4 @@
-from proxy_server import application
+from proxy_server import server as application
 
 if __name__ == '__main__':
     application.run()

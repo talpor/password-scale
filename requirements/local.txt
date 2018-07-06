@@ -1,4 +1,4 @@
--r ./slack-application.txt
+-r ./proxy-server.txt
 -r ./storage-server.txt
 
 awsebcli==3.14.1

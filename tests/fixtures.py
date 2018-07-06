@@ -28,10 +28,10 @@ requests_mock = RequestsMock()
 
 @pytest.fixture
 def client_fixture():
-    server.application.config['TESTING'] = True
-    client = server.application.test_client()
+    server.server.config['TESTING'] = True
+    client = server.server.test_client()
 
-    with server.application.app_context():
+    with server.server.app_context():
         server.db.create_all()
 
     yield client
@@ -50,7 +50,7 @@ class RequestData(object):
 
         if register:
             if self.client is None:
-                raise Exception('client is required fot register')
+                raise Exception('client is required for register')
             self.client.post('/slack/command', data={
                 **vars(self),
                 **{'text': 'register https://dummy-password-server.com'}

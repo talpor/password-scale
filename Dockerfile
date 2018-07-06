@@ -17,7 +17,7 @@ RUN yarn global add babel-cli
 RUN yarn global add node-sass
 
 WORKDIR /app
-RUN pip install -r requirements.txt
+RUN pip install -r requirements/proxy-server.txt
 RUN yarn
 
 EXPOSE 8000

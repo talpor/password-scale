@@ -27,16 +27,16 @@ secret_key = generate_key(os.environ.get('BIP39'))
 private_key = secret_key.exportKey("PEM")
 public_key = secret_key.publickey().exportKey("PEM")
 
-application = Flask(__name__)
-application.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
-application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+server = Flask(__name__)
+server.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+server.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-assets = Environment(application)
+assets = Environment(server)
 cache = Cache('/tmp/tokencache')
-sentry = Sentry(application, dsn=os.environ.get('SENTRY_DSN'))
+sentry = Sentry(server, dsn=os.environ.get('SENTRY_DSN'))
 
 cmd = PasswordScaleCMD(cache, private_key)
-db = SQLAlchemy(application)
+db = SQLAlchemy(server)
 
 all_css = Bundle(
     'css/reset.scss',
@@ -93,12 +93,12 @@ def _register_server(url, team):
     return True
 
 
-@application.route('/public_key', methods=['GET'])
+@server.route('/public_key', methods=['GET'])
 def get_public_key():
     return public_key
 
 
-@application.route('/slack/action', methods=['POST'])
+@server.route('/slack/action', methods=['POST'])
 def action_api():
     data = request.values.to_dict()
     payload = json.loads(data['payload'])
@@ -150,7 +150,7 @@ def action_api():
             )
 
 
-@application.route('/slack/command', methods=['POST'])
+@server.route('/slack/command', methods=['POST'])
 def api():
     data = request.values.to_dict()
     try:
@@ -421,7 +421,7 @@ def api():
         return warning('*{}* is not in the password store.'.format(app))
 
 
-@application.route('/insert/<token>', methods=['GET', 'POST'])
+@server.route('/insert/<token>', methods=['GET', 'POST'])
 def insert(token):
     token = str(token)
     if token not in cache:
@@ -454,7 +454,7 @@ def insert(token):
     abort(404)
 
 
-@application.route('/slack/oauth', methods=['GET'])
+@server.route('/slack/oauth', methods=['GET'])
 def slack_oauth():
     if 'code' not in request.args:
         abort(400)
@@ -487,7 +487,7 @@ def slack_oauth():
     return render_template('success.html', message=message)
 
 
-@application.route('/', methods=['GET'])
+@server.route('/', methods=['GET'])
 def landing():
     authorize_url = '{}{}'.format(
         'https://slack.com/oauth/authorize?', urlencode({
@@ -499,15 +499,15 @@ def landing():
     return render_template('landing.html', authorize_url=authorize_url)
 
 
-@application.route('/privacy', methods=['GET'])
+@server.route('/privacy', methods=['GET'])
 def privacy():
     return render_template('privacy.html')
 
 
-@application.errorhandler(404)
+@server.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
 
 
 if __name__ == '__main__':
-    application.run(host='0.0.0.0')
+    server.run(host='0.0.0.0')
