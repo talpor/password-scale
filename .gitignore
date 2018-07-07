@@ -1,17 +1,12 @@
-*__pycache__*
-*.env
-*.db
-.pytest_cache*
-zappa_settings.json
-
-# Compiled assets
-static/.webassets-cache
-static/dist
-
-# yarn libraries
-static/lib
-
-# Elastic Beanstalk Files
-.elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
 !.elasticbeanstalk/*.global.yml
+*.db
+*.env
+*__pycache__*
+.coverage
+.elasticbeanstalk/*
+.pytest_cache*
+static/.webassets-cache
+static/dist
+static/lib
+zappa_settings.json

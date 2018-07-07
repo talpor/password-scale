@@ -1,10 +1,13 @@
-from mocks import RequestsMock, PasswordScaleCMDMock
+from mocks import CacheMock, RequestsMock, PasswordScaleCMDMock, CryptoMock
+from urllib.parse import urlencode
 from fixtures import (
-    client_fixture, RequestData, VERIFICATION_TOKEN, SITE, server
+    client_fixture, RequestData, VERIFICATION_TOKEN, SITE, SLACK_APP_ID, server
 )
 
-requests_mock = RequestsMock()
+cache_mock = CacheMock(server)
+crypto_mock = CryptoMock(server)
 password_scale_cmd_mock = PasswordScaleCMDMock(server)
+requests_mock = RequestsMock()
 
 client = client_fixture
 
@@ -169,3 +172,99 @@ def test__api_endpoint__show_failure(client):
         rv = client.post('/slack/command', data=vars(data))
         assert bytes('*{}* is not in the password store.'.format(secret),
                      'utf-8') in rv.data
+
+
+@cache_mock.has_token
+def test__insert_get__require_valid_token(client):
+    rv = client.get('/insert/{}'.format(cache_mock.invalid_token))
+    assert rv.status_code == 404
+
+    rv = client.get('/insert/{}'.format(cache_mock.token))
+    assert rv.status_code == 200
+
+
+@cache_mock.has_token
+def test__insert_get__render_editor(client):
+    rv = client.get('/insert/{}'.format(cache_mock.token))
+    assert bytes('<div id="Insert"', 'utf-8') in rv.data
+    assert bytes('Paste the password or secret', 'utf-8') in rv.data
+
+
+@cache_mock.has_token
+@crypto_mock.encrypt
+@password_scale_cmd_mock.insert
+def test__insert_post__require_valid_token(client):
+    rv = client.post('/insert/{}'.format(cache_mock.invalid_token))
+    assert rv.status_code == 400
+
+    rv = client.post('/insert/{}'.format(cache_mock.token), data={
+        'secret': 'secret'
+    })
+    assert rv.status_code == 200
+
+
+@cache_mock.has_token
+@crypto_mock.encrypt
+@password_scale_cmd_mock.insert
+def test__insert_post__show_success_message(client):
+    rv = client.post('/insert/{}'.format(cache_mock.token), data={
+        'secret': 'secret'
+    })
+    assert bytes('Your secret was securely stored!', 'utf-8') in rv.data
+
+
+@requests_mock.get_oauth_access_url
+def test__oauth_endpoint__require_get(client):
+    rv = client.post('/slack/oauth')
+    assert rv.status_code == 405
+
+    rv = client.get('/slack/oauth?code=12345')
+    assert rv.status_code == 200
+
+
+@requests_mock.get_oauth_access_url
+def test__oauth_endpoint__require_code(client):
+    rv = client.get('/slack/oauth')
+    assert rv.status_code == 400
+
+
+@requests_mock.get_oauth_access_url
+def test__oauth_endpoint__success_message(client):
+    rv = client.get('/slack/oauth?code=12345')
+    assert bytes('application was installed successfully', 'utf-8') in rv.data
+
+
+def test__landing__render(client):
+    rv = client.get('/')
+    assert rv.status_code == 200
+    assert bytes('<title>Password Scale</title>', 'utf-8') in rv.data
+
+
+def test__landing__deny_post(client):
+    rv = client.post('/')
+    assert rv.status_code == 405
+
+
+def test__landing__show_add_to_slack_button(client):
+    rv = client.get('/')
+    assert bytes('{}{}'.format(
+        'https://slack.com/oauth/authorize?', urlencode({
+            'client_id': SLACK_APP_ID
+        })), 'utf-8') in rv.data
+
+
+def test__privacy__render(client):
+    rv = client.get('/privacy')
+    assert rv.status_code == 200
+    assert bytes('Privacy Policy', 'utf-8') in rv.data
+
+
+def test__privacy__deny_post(client):
+    rv = client.post('/privacy')
+    assert rv.status_code == 405
+
+
+def test__not_found__render(client):
+    rv = client.post('/404')
+    assert rv.status_code == 404
+    assert bytes('<h1>404</h1>', 'utf-8') in rv.data
