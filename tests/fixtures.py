@@ -45,7 +45,7 @@ class RequestData(object):
         self.team_id = ''.join(
             random.choices(string.ascii_uppercase + string.digits, k=9))
 
-        new_team = server.Team(team_id=self.team_id)
+        new_team = server.Team(slack_id=self.team_id, domain=self.team_id)
         server.db.session.add(new_team)
         server.db.session.commit()
 

@@ -59,7 +59,8 @@ assets.register('js_insert', insert_js)
 
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    team_id = db.Column(db.String, unique=True)
+    slack_id = db.Column(db.String, unique=True)
+    domain = db.Column(db.String, unique=True)
     url = db.Column(db.String, nullable=True)
     public_key = db.Column(db.Text, nullable=True)
     created = db.Column(db.DateTime)
@@ -69,13 +70,14 @@ class Team(db.Model):
         url_parts[2] = os.path.join(url_parts[2], path)
         return urlunparse(url_parts)
 
-    def __init__(self, team_id, created=None):
-        self.team_id = team_id
+    def __init__(self, slack_id, domain, created=None):
+        self.slack_id = slack_id
+        self.domain = domain
         if self.created is None:
             self.created = datetime.utcnow()
 
     def __repr__(self):
-        return 'Slack team: {}'.format(self.team_id)
+        return 'Slack team: {}'.format(self.domain)
 
 
 def _register_server(url, team):
@@ -118,12 +120,12 @@ def action_api():
         elif action == 'no_configure':
             return success(
                 'Sure! for more information about the pass command working '
-                'check `/pass help` and the source code in https://github.com/'
-                'talpor/password-scale/'
+                'check `/pass help` or our web page in '
+                'https://scale.talpor.com'
             )
 
         team = db.session.query(Team).filter_by(
-            team_id=payload['team']['id']).first()
+            slack_id=payload['team']['id']).first()
 
         if action == 'reconfigure_server':
             if not validators.url(option['value']):
@@ -155,7 +157,7 @@ def api():
     data = request.values.to_dict()
     try:
         command = re.split('\s+', data['text'])
-        team_id = data['team_id']
+        slack_id = data['team_id']
         team_domain = data['team_domain']
         channel = data['channel_id']
     except KeyError:
@@ -165,7 +167,7 @@ def api():
     if 'token' not in data or data['token'] != VERIFICATION_TOKEN:
         return abort(404)
 
-    team = db.session.query(Team).filter_by(team_id=team_id).first()
+    team = db.session.query(Team).filter_by(slack_id=slack_id).first()
     if not team:
         return error(
             'You are not registered in our proxy server, try removig the app '
@@ -471,13 +473,14 @@ def slack_oauth():
         sentry.captureMessage(response)
         abort(403)
 
-    team_id = response['team_id']
+    slack_id = response['team_id']
 
-    if not db.session.query(Team).filter_by(team_id=team_id).first():
+    if not db.session.query(Team).filter_by(slack_id=slack_id).first():
         # deliberately does not store the `access_token` may be will be useful
         # for a future feature but right now it is not necessary
         new_team = Team(
-            team_id=response['team_id'],
+            slack_id=slack_id,
+            domain=response['team_domain']
             # access_token=response.json()['access_token'],
         )
         db.session.add(new_team)

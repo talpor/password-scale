@@ -31,7 +31,8 @@ class RequestsMock(object):
             requests.get = Mock(return_value=MockRequest(
                 200, jsonc={
                     'ok': True,
-                    'team_id': 1
+                    'team_id': 1,
+                    'team_domain': 'domain'
                 })
             )
             return func(*args, **kwargs)
