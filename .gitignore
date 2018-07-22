@@ -6,7 +6,7 @@
 .coverage
 .elasticbeanstalk/*
 .pytest_cache*
-static/.webassets-cache
-static/dist
-static/lib
+proxy_server/static/.webassets-cache
+proxy_server/static/dist
+proxy_server/static/lib
 zappa_settings.json

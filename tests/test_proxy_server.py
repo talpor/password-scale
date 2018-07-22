@@ -1,12 +1,20 @@
+import os
+import sys
+
 from mocks import CacheMock, RequestsMock, PasswordScaleCMDMock, CryptoMock
 from urllib.parse import urlencode
 from fixtures import (
-    client_fixture, RequestData, VERIFICATION_TOKEN, SITE, SLACK_APP_ID, server
+    client_fixture, RequestData, VERIFICATION_TOKEN, SITE, SLACK_APP_ID
 )
 
-cache_mock = CacheMock(server)
-crypto_mock = CryptoMock(server)
-password_scale_cmd_mock = PasswordScaleCMDMock(server)
+sys.path.insert(0, os.path.join(sys.path[0], '..', 'proxy_server'))  # noqa
+import insert
+import slack_command
+from server import public_key
+
+cache_mock = CacheMock(insert)
+crypto_mock = CryptoMock(insert)
+password_scale_cmd_mock = PasswordScaleCMDMock(slack_command)
 requests_mock = RequestsMock()
 
 client = client_fixture
@@ -14,7 +22,7 @@ client = client_fixture
 
 def test__public_key_endpoint(client):
     rv = client.get('/public_key')
-    assert rv.data == server.public_key
+    assert rv.data == public_key
 
 
 def test__api_endpoint__require_post(client):

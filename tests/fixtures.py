@@ -20,20 +20,21 @@ os.environ['SITE'] = SITE
 os.environ['SLACK_APP_ID'] = SLACK_APP_ID
 os.environ['SLACK_APP_SECRET'] = '11111111111111111111111111111111'
 os.environ['VERIFICATION_TOKEN'] = VERIFICATION_TOKEN
+sys.path.insert(0, os.path.join(sys.path[0], '..', 'proxy_server'))
 
-sys.path.insert(0, '')
-import proxy_server as server  # noqa
+from routes import server  # noqa
+from server import Team, db  # noqa
 
 requests_mock = RequestsMock()
 
 
 @pytest.fixture
 def client_fixture():
-    server.server.config['TESTING'] = True
-    client = server.server.test_client()
+    server.config['TESTING'] = True
+    client = server.test_client()
 
-    with server.server.app_context():
-        server.db.create_all()
+    with server.app_context():
+        db.create_all()
 
     yield client
 
@@ -45,9 +46,9 @@ class RequestData(object):
         self.team_id = ''.join(
             random.choices(string.ascii_uppercase + string.digits, k=9))
 
-        new_team = server.Team(slack_id=self.team_id, domain=self.team_id)
-        server.db.session.add(new_team)
-        server.db.session.commit()
+        new_team = Team(slack_id=self.team_id, domain=self.team_id)
+        db.session.add(new_team)
+        db.session.commit()
 
         if register:
             if self.client is None:
