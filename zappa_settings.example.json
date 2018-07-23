@@ -7,13 +7,14 @@
         "runtime": "python3.6",
         "s3_bucket": "my-zappa-s3-bucket",
         "environment_variables": {
-            "VERSION": 1,
+            "VERSION": "1",
             "AWS_ACCESS_KEY_ID": "AK111111111111111111",
             "AWS_SECRET_ACCESS_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "ONETIMESECRET_KEY": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
             "ONETIMESECRET_USER": "my-onetimesecret-user@provider.com",
             "PASSWORD_STORAGE": "my-password-storage-s3-bucket",
-            "BIP39": "bip39 recovery phrase def twelve words mnemonic code for generating deterministic keys"
+            "BIP39":
+                "bip39 recovery phrase def twelve words mnemonic code for generating deterministic keys"
         }
     }
 }
