@@ -22,4 +22,5 @@ RUN yarn
 
 EXPOSE 8000
 
+WORKDIR /app/proxy_server
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "wsgi"]
