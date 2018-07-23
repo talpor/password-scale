@@ -1,8 +1,9 @@
-@import 'vars';
+@import "vars";
 
 #Insert {
     .center {
         text-align: center;
+        margin-top: 20px;
     }
     p {
         line-height: 1.5;
@@ -11,7 +12,7 @@
         font-size: 1.1em;
     }
     .tip {
-        margin-bottom: 15px;
+        margin-bottom: 25px;
         color: $gray;
     }
     textarea {
@@ -25,11 +26,14 @@
         height: auto;
     }
     .actions {
-        margin-top: 10px;
+        margin-top: 15px;
         text-align: right;
+        button {
+            margin-left: 5px;
+        }
     }
-    .btn-orange {
-        background-color: $orange-dark;
+    .btn-blue {
+        background-color: $blue-dark;
         color: white;
     }
     .counter {

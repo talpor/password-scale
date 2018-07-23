@@ -2,6 +2,7 @@
 !.elasticbeanstalk/*.global.yml
 *.db
 *.env
+*.pyc
 *__pycache__*
 .coverage
 .elasticbeanstalk/*

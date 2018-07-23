@@ -3,8 +3,8 @@
 {% block meta %}
 <meta name="robots" content="noindex, nofollow">
 {% endblock %}
-{% include '_header.html' %}
 {% block content %}
+<div id="HeadingLine"></div>
 <div id="Insert" class="container">
     <div class="center">
         <p class="headline">Paste the password or secret message or private link for <b>{{ secret }}</b>.</p>
@@ -18,9 +18,9 @@
             <div class="counter"></div>
         </div>
         <div class="actions">
-            <button name="generator1" class="btn" disabled>Generate a human readable random password</button>
+            <button name="generator1" class="btn" disabled>Generate a human readable password</button>
             <button name="generator2" class="btn" disabled>Generate a random password</button>
-            <button name="create" type="submit" class="btn btn-orange">Create</button>
+            <button name="create" type="submit" class="btn btn-blue">Create</button>
         </div>
     </form>
 </div>

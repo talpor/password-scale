@@ -1,6 +1,6 @@
-@import 'vars';
+@import "vars";
 
-$header-text-color: $lighter-gray;
+$header-text-color: white;
 
 #Landing {
     .container {
@@ -10,67 +10,122 @@ $header-text-color: $lighter-gray;
     .flex {
         display: flex;
     }
+    h1,
+    h2,
+    h3,
+    h4 {
+        text-transform: uppercase;
+    }
     header {
-        margin: 0;
         background-color: $blue;
-        background-image: linear-gradient(to right bottom, #1a5185, #164f85, #114c85, #0c4a84, #074784);
+        background-image: url("/static/img/bg.png");
+        background-position-y: center;
+        background-size: cover;
         color: $header-text-color;
-        font-size: 1.2em;
-        .col {
-            flex: 2;
-            height: 464px;
-            &.bg {
-                flex: 3;
-                background-image: url('/static/img/bg.png');
-                background-size: 100%;
-                background-repeat: no-repeat;
-            }
-            &.main {
-                text-align: center;
-                h1 {
-                    margin: 80px 0 20px 0;
-                    color: $header-text-color
-                }
-            }
-            .slack-button {
-                margin-top: 30px;
-                a {
-                    display: block;
-                }
+        height: 570px;
+        margin: 0;
+        text-align: center;
+        .logo {
+            margin-top: 120px;
+            width: 132;
+        }
+        h1 {
+            font-size: 1.1em;
+            margin-top: 44px;
+            color: $header-text-color;
+            font-weight: 700;
+            letter-spacing: 0.4em;
+        }
+        .separator {
+            width: 30px;
+            height: 2px;
+            background-color: #ffffff;
+            margin: 30px auto 25px auto;
+        }
+        p {
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.4em;
+            width: 457px;
+            margin: 0 auto;
+            line-height: 2.3;
+        }
+        .slack-button {
+            margin-top: 30px;
+            a {
+                display: block;
             }
         }
     }
     .features {
-        padding: 50px 0;
-        text-align: center;
+        margin: 71px auto 78px auto;
         h2 {
-            height: 95px;
+            font-size: 0.9em;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            line-height: 1.4;
+            margin: 30px 0 27px 0;
+        }
+        img {
+            margin-top: 25px;
         }
         .col {
+            border-top: solid 4px $blue;
             flex: 1;
         }
         .col1 {
-            padding-right: 5px;
+            img {
+                width: 63px;
+            }
+            margin-right: 37px;
         }
         .col2 {
-            padding: 0 5px;
+            img {
+                width: 42px;
+            }
+            margin: 0 39px;
         }
-        .col1 {
-            padding-left: 5px;
+        .col3 {
+            img {
+                width: 46px;
+            }
+            margin-left: 37px;
+        }
+        p {
+            font-size: 0.7em;
+            line-height: 1.75;
+            font-weight: 200;
         }
     }
     .command {
         padding: 30px 0;
         background-color: $lighter-gray;
+        h3 {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 1.4em;
+            letter-spacing: 0.3em;
+        }
+        .separator {
+            width: 30px;
+            height: 2px;
+            background-color: $blue;
+            margin: 18px auto;
+        }
         .col {
             flex: 1;
         }
         .row {
+            font-size: 0.8em;
             margin-top: 20px;
             height: 100px;
             padding-right: 10px;
             p {
                 margin-top: 10px;
+                font-weight: 300;
+            }
+            .header {
+                font-weight: bold;
             }
         }
         code {
@@ -78,7 +133,11 @@ $header-text-color: $lighter-gray;
         }
     }
     .how-it-works {
+        font-size: 0.8em;
+        font-family: $monospace;
+        font-weight: 300;
         padding: 30px 0;
+        width: 960px;
         p {
             padding: 12px 0;
         }
@@ -93,25 +152,40 @@ $header-text-color: $lighter-gray;
         }
     }
     .server {
-        text-align: center;
-        font-size: 1.1em;
+        font-size: 0.75em;
+        line-height: 1.8;
+        font-weight: 300;
         background-color: $lighter-gray;
+        .github-logo {
+            flex: 1;
+            img {
+                width: 90%;
+                margin: 0 auto;
+            }
+        }
+        .copy {
+            flex: 7;
+            p {
+                padding: 8px 20px 0;
+            }
+        }
         .container {
             padding: 50px 0;
-            width: 960px;
+            width: 650px;
         }
         a {
-            font-weight: bold;
-            color: black;
+            color: $font-color;
             text-decoration: underline;
         }
     }
     footer {
-        height: 50px;
-        background-color: $blue;
+        height: 39.9px;
+        background-image: linear-gradient(to right, #3e9dec, #4b54cb);
         font-size: 0.7em;
+        letter-spacing: 0.1em;
         a {
             color: white;
+            margin-right: 40px;
         }
         ul {
             margin-top: 10px;
@@ -130,35 +204,51 @@ $header-text-color: $lighter-gray;
         .container {
             width: 600px;
             h4 {
-                margin-top: 20px;
+                margin-top: 50px;
+                text-align: center;
+                font-size: 1.2em;
+                letter-spacing: 0.3em;
+            }
+            .separator {
+                width: 30px;
+                height: 2px;
+                background-color: $blue;
+                margin: 18px auto 8px auto;
             }
             form {
+                text-align: center;
                 margin: 0 0 30px 0;
-                input, textarea {
-                    margin-top: 10px;
+                input,
+                textarea {
+                    border: 1px solid $light-gray;
                     line-height: 2;
+                    margin-top: 25px;
                     padding-left: 10px;
                     width: 100%;
-                    background-color: $lighter-gray;
-                    border: 1px solid $light-gray;
                     &:focus {
                         outline: none !important;
-                        border:1px solid $orange;
+                        border: 1px solid $blue;
                         box-shadow: 0 0 10px $light-gray;
                     }
                 }
+                input {
+                    height: 44px;
+                }
                 textarea {
                     padding-top: 5px;
-                    margin: 10px 0;
                     line-height: 1.5;
                     resize: vertical;
                 }
                 button {
-                    text-transform: uppercase;
-                    border: 2px solid $blue;
-                    color: $blue;
                     background: transparent;
-                    padding: 0.6em 0.9em;
+                    border: 2px solid $blue;
+                    color: $font-color;
+                    font-size: 0.75em;
+                    font-weight: 700;
+                    letter-spacing: 0.2em;
+                    margin: 25px auto;
+                    padding: 0.85em 3.1em;
+                    text-transform: uppercase;
                 }
             }
         }

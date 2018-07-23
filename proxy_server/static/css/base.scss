@@ -1,8 +1,9 @@
-@import 'vars';
+@import "vars";
 
 body {
-    font-family: $serif, serif;
+    font-family: $sans;
     font-size: 20px;
+    color: $font-color;
     a {
         color: $blue;
     }
@@ -25,18 +26,24 @@ body {
     }
     #HeadingLine {
         width: 100%;
-        background-color: $orange;
-        border-bottom: 4px solid $orange;
+        background-image: linear-gradient(to right, #3e9dec, #4b54cb);
+        height: 4px;
     }
     header {
+        background-image: linear-gradient(to right, #3e9dec, #4b54cb);
+        height: 37px;
         .logo {
             width: 48px;
+            margin-top: 5px;
         }
         .links {
+            font-size: 0.7em;
             float: right;
-            margin-top: 15px;
+            margin-top: 9px;
+            a {
+                color: white;
+            }
         }
-        margin: 10px 0;
     }
     .btn {
         font-family: inherit;
@@ -44,7 +51,6 @@ body {
         cursor: pointer;
         user-select: none;
         border: 1px solid transparent;
-        border-radius: 4px;
         color: $darh-gray;
         background-color: white;
         border-color: $light-gray;
@@ -56,10 +62,12 @@ body {
     }
     .success {
         h1 {
-            margin: 20px 0 15px 0;
+            margin: 50px 0 25px 0;
         }
     }
-    input, textarea, button {
-        font-family: $serif, serif;
+    input,
+    textarea,
+    button {
+        font-family: $sans;
     }
 }

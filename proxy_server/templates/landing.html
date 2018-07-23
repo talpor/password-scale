@@ -14,6 +14,7 @@
     <div class="command">
         <div class="container">
             <h3>Slack command ussage:</h3>
+            <div class="separator"></div>
             {% include 'landing/_usage.html' %}
         </div>
     </div>
@@ -21,16 +22,22 @@
         {% include 'landing/_how.html' %}
     </div>
     <div class="server">
-        <div class="container">
-            <p>Go to our <a href="https://github.com/talpor/password-scale" target="blank">github project</a> for instructions on how to set up your own password server, also you can try the command on your Slack team using our test server</p>
+        <div class="container flex">
+            <div class="github-logo">
+                <img src="/static/img/github@2x.png" alt="github logo">
+            </div>
+            <div class="copy">
+                <p>Go to our <a href="https://github.com/talpor/password-scale" target="blank">github project</a> for instructions on how to set up your own password server, also you can try the command on your Slack team using our test server</p>
+            </div>
         </div>
     </div>
     <div class="contact-form">
         <div class="container">
             <h4>Send us a message</h4>
+            <div class="separator"></div>
             <form method="POST" action="https://formspree.io/4i84hsnd82jy@opayq.com">
-                <input type="email" name="email" placeholder="Your email">
-                <textarea rows="5" name="message" placeholder="Your message"></textarea>
+                <input type="email" name="email" placeholder="EMAIL">
+                <textarea rows="9" name="message" placeholder="MESSAGE"></textarea>
                 <button type="submit">Send</button>
             </form>
         </div>

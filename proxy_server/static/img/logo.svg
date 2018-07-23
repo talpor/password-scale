@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="132" height="59" viewBox="0 0 132 59">
+    <g fill="none" fill-rule="evenodd">
+        <g fill="#FFF" transform="translate(13.373 37.538)">
+            <ellipse cx="23.66" cy="4.088" rx="4.115" ry="4.088"/>
+            <ellipse cx="4.115" cy="4.088" rx="4.115" ry="4.088"/>
+            <ellipse cx="43.205" cy="4.088" rx="4.115" ry="4.088"/>
+            <ellipse cx="62.75" cy="4.088" rx="4.115" ry="4.088"/>
+            <ellipse cx="82.295" cy="4.088" rx="4.115" ry="4.088"/>
+        </g>
+        <path stroke="#FFF" stroke-width="2.5" d="M110.877 24.452v33.27H1.25V34.34l9.933-9.888h99.694z"/>
+        <path stroke="#FFF" stroke-width="2.5" d="M10.75 26.208l-7.72 7.677h7.72v-7.677z"/>
+        <path fill="#50E3C2" d="M109.672 46.254h2.667v2.652h-2.667z"/>
+        <path fill="#FFF" d="M117.005 42.939h2.667v2.652h-2.667zM109.672 35.647h2.667v2.652h-2.667z"/>
+        <path fill="#50E3C2" d="M117.005 30.343h2.667v2.652h-2.667z"/>
+        <path fill="#4A90E2" fill-opacity=".3" d="M125.672 32.995h2.667v2.652h-2.667zM113.672 50.894h2.667v2.652h-2.667z" style="mix-blend-mode:multiply"/>
+        <path fill="#50E3C2" d="M114.339 13.77h2.667v2.652h-2.667z"/>
+        <path fill="#FFF" d="M121.005 23.05h2.667v2.653h-2.667zM124.339 9.13h2.667v2.652h-2.667z"/>
+        <path fill="#4A90E2" fill-opacity=".3" d="M121.672.512h2.667v2.652h-2.667z" style="mix-blend-mode:multiply"/>
+        <path fill="#50E3C2" d="M128.575 17.767h2.667v2.652h-2.667z"/>
+    </g>
+</svg>
