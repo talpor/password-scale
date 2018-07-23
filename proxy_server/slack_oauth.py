@@ -34,7 +34,7 @@ def slack_oauth():
         # for a future feature but right now it is not necessary
         new_team = Team(
             slack_id=slack_id,
-            domain=response['team_domain']
+            domain=response['team_name']
             # access_token=response.json()['access_token'],
         )
         db.session.add(new_team)
