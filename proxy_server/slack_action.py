@@ -62,6 +62,7 @@ def action_api():
             return success(
                 'The testing server is already configured! remember that '
                 'the data on this server can be deleted without prior '
-                'notice, when you want to configure your final server '
-                'you should only execute the command `/pass register` again.'
+                'notice, when you want to configure your company server '
+                'you should only execute the command `/pass register` along'
+                'with the url of your the server.'
             )
