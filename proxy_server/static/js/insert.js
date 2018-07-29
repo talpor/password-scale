@@ -8,13 +8,11 @@ const getRandomValues = mod => {
         const result = new Uint32Array(1)
         window.crypto.getRandomValues(result)
         return result[0] % mod
-    }
-    else if(window.msCrypto && window.msCrypto.getRandomValues) {
+    } else if (window.msCrypto && window.msCrypto.getRandomValues) {
         const result = new Uint32Array(1)
         window.msCrypto.getRandomValues(result)
         return result[0] % mod
-    }
-    else {
+    } else {
         return Math.floor(Math.random() * mod)
     }
 }
@@ -34,16 +32,18 @@ const generateHumanReadableRandomPassword = event => {
 const generateRandomPassword = event => {
     event.preventDefault()
     const form = getForm()
-    const generate = (length) => {
-        return Array.apply(null, {'length': length}).map(function() {
-            let result
-            for(;;) {
-                result = String.fromCharCode(getRandomValues(256))
-                if (/[a-zA-Z0-9_\-+.]/.test(result)) {
-                    return result
+    const generate = length => {
+        return Array.apply(null, { length: length })
+            .map(function() {
+                let result
+                for (;;) {
+                    result = String.fromCharCode(getRandomValues(256))
+                    if (/[a-zA-Z0-9_\-+.]/.test(result)) {
+                        return result
+                    }
                 }
-            }
-        }, this).join('')
+            }, this)
+            .join('')
     }
     form.elements.secret.value = generate(32)
 }
@@ -63,30 +63,28 @@ const createSecret = event => {
         // form.elements.secret.value = msg
         // form.elements.encrypted.checked = true
         form.submit()
-    }
-    else {
+    } else {
         alert('error while encrypting')
     }
-
 }
 
 const updateUI = event => {
     const form = getForm()
     const counter = form.querySelector('.counter')
     const maxbytes = 245
-    const action = event.target.value === '' ?  'removeAttribute' : 'setAttribute'
+    const action =
+        event.target.value === '' ? 'removeAttribute' : 'setAttribute'
     form.elements.generator1[action]('disabled', true)
     form.elements.generator2[action]('disabled', true)
     counter.innerHTML = `${event.target.value.length}/${maxbytes}`
     if (event.target.value.length > maxbytes) {
-        counter.classList.add('warning');
-    }
-    else if (counter.classList.contains('warning')) {
-        counter.classList.remove('warning');
+        counter.classList.add('warning')
+    } else if (counter.classList.contains('warning')) {
+        counter.classList.remove('warning')
     }
 }
 
-document.addEventListener('DOMContentLoaded',function(){
+document.addEventListener('DOMContentLoaded', function() {
     const form = getForm()
     // bind events
     form.elements.generator1.onclick = generateHumanReadableRandomPassword
@@ -97,4 +95,4 @@ document.addEventListener('DOMContentLoaded',function(){
     // enable generator buttons
     form.elements.generator1.removeAttribute('disabled')
     form.elements.generator2.removeAttribute('disabled')
-});
+})
