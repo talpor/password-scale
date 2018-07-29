@@ -47,8 +47,14 @@ insert_js = Bundle(
     filters='babel',
     output='dist/scripts.js'
 )
+landing_js = Bundle(
+    'js/landing.js',
+    filters='babel',
+    output='dist/landing.js'
+)
 assets.register('css_all', all_css)
 assets.register('js_insert', insert_js)
+assets.register('js_landing', landing_js)
 
 
 def _register_server(url, team):

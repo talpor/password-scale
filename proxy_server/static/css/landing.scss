@@ -54,6 +54,9 @@ $header-text-color: white;
             margin-top: 30px;
             a {
                 display: block;
+                &:focus {
+                    outline: none;
+                }
             }
         }
     }
@@ -134,10 +137,88 @@ $header-text-color: white;
     }
     .how-it-works {
         font-size: 0.8em;
-        font-family: $monospace;
         font-weight: 300;
-        padding: 30px 0;
-        width: 960px;
+        padding: 0;
+        width: 100%;
+        height: 670px;
+        display: flex;
+        .separator {
+            width: 30px;
+            height: 2px;
+            background-color: #ffffff;
+        }
+        .col {
+            flex: 1;
+            overflow: hidden;
+            > div {
+                width: 540px;
+            }
+            &.brief {
+                background-image: linear-gradient(230deg, #3e9dec, #4b54cb);
+                color: white;
+                > div {
+                    margin: 0 0 0 auto;
+                    h3 {
+                        margin: 176px 0 18px 0;
+                        font-size: 1.7em;
+                        letter-spacing: 0.4em;
+                    }
+                    p {
+                        margin-top: 28px;
+                        line-height: 2;
+                        width: 90%;
+                    }
+                }
+            }
+            &.steps {
+                position: relative;
+                h4 {
+                    margin: 52px 0 20px 61px;
+                    font-size: 1.1em;
+                    letter-spacing: 0.1em;
+                }
+                .indicators {
+                    position: absolute;
+                    left: 528px;
+                    top: 52px;
+                    li {
+                        margin-bottom: 11px;
+                        width: 10px;
+                        height: 10px;
+                        border: solid 1px #c3c3c3;
+                        cursor: pointer;
+                        &.active {
+                            border-style: solid;
+                            border-width: 1px;
+                            border-image-source: linear-gradient(
+                                to right,
+                                #3e9dec,
+                                #1bedca
+                            );
+                            border-image-slice: 1;
+                        }
+                    }
+                }
+                .slide-0,
+                .slide-1 {
+                    transition: margin 700ms;
+                    height: 618px;
+                }
+                .slide-0.hide {
+                    margin-top: -670px;
+                }
+                ul {
+                    margin-left: 61px;
+                    list-style: none;
+                    padding: 0;
+                    li {
+                        font-size: 0.9em;
+                        margin: 10px 0;
+                        line-height: 2;
+                    }
+                }
+            }
+        }
         p {
             padding: 12px 0;
         }
