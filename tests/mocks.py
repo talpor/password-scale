@@ -32,7 +32,7 @@ class RequestsMock(object):
                 200, jsonc={
                     'ok': True,
                     'team_id': 1,
-                    'team_domain': 'domain'
+                    'team_name': 'name'
                 })
             )
             return func(*args, **kwargs)
