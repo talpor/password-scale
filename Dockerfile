@@ -9,6 +9,7 @@ RUN apk add \
     libressl-dev \
     make \
     nodejs \
+    nodejs-npm \
     postgresql-dev \
     python-dev
 
