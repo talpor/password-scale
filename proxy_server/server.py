@@ -75,7 +75,7 @@ def _register_server(url, team):
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     slack_id = db.Column(db.String, unique=True)
-    domain = db.Column(db.String, unique=True)
+    name = db.Column(db.String, unique=True)
     url = db.Column(db.String, nullable=True)
     public_key = db.Column(db.Text, nullable=True)
     created = db.Column(db.DateTime)
@@ -85,11 +85,11 @@ class Team(db.Model):
         url_parts[2] = os.path.join(url_parts[2], path)
         return urlunparse(url_parts)
 
-    def __init__(self, slack_id, domain, created=None):
+    def __init__(self, slack_id, name, created=None):
         self.slack_id = slack_id
-        self.domain = domain
+        self.name = name
         if self.created is None:
             self.created = datetime.utcnow()
 
     def __repr__(self):
-        return 'Slack team: {}'.format(self.domain)
+        return 'Slack team: {}'.format(self.name)

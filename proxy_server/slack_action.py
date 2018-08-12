@@ -49,7 +49,7 @@ def action_api():
             if not _register_server(option['value'], team):
                 return error(
                     'Unable to retrieve the _public_key_ '
-                    'from the server'.format(payload['team']['domain'])
+                    'from the server'
                 )
             return success('Password server successfully updated!')
 
