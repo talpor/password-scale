@@ -5,7 +5,7 @@ import re
 
 from flask import Blueprint, abort, request, jsonify
 
-from server import db, Team, cmd, _register_server
+from server import db, Team, cmd
 from environ import VERIFICATION_TOKEN, SITE
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))  # noqa
@@ -132,7 +132,7 @@ def api():
                 ]
             })
 
-        if not _register_server(url, team):
+        if not team.register_server(url):
             return error(
                 'Unable to retrieve the _public_key_ '
                 'from the server'.format(team_domain)

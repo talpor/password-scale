@@ -5,7 +5,7 @@ import validators
 
 from flask import Blueprint, abort, request
 
-from server import db, Team, _register_server
+from server import db, Team
 from environ import DEMO_SERVER, VERIFICATION_TOKEN
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))  # noqa
@@ -46,7 +46,7 @@ def action_api():
             if not validators.url(option['value']):
                 return error('Invalid URL format, use: https://<domain>')
 
-            if not _register_server(option['value'], team):
+            if not team.register_server(option['value']):
                 return error(
                     'Unable to retrieve the _public_key_ '
                     'from the server'
@@ -54,7 +54,7 @@ def action_api():
             return success('Password server successfully updated!')
 
         elif action == 'use_demo_server':
-            if not _register_server(DEMO_SERVER, team):
+            if not team.register_server(DEMO_SERVER):
                 return error(
                     'An error occurred registering the server, '
                     'please try later.'

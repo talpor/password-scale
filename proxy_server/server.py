@@ -57,21 +57,6 @@ assets.register('js_insert', insert_js)
 assets.register('js_landing', landing_js)
 
 
-def _register_server(url, team):
-    team.url = url
-    try:
-        response = requests.get(team.api('public_key'))
-    except requests.exceptions.ConnectionError:
-        return False
-
-    if response.status_code != requests.codes.ok:
-        return False
-
-    team.public_key = response.text
-    db.session.commit()
-    return True
-
-
 class Team(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     slack_id = db.Column(db.String, unique=True)
@@ -79,6 +64,20 @@ class Team(db.Model):
     url = db.Column(db.String, nullable=True)
     public_key = db.Column(db.Text, nullable=True)
     created = db.Column(db.DateTime)
+
+    def register_server(self, url):
+        self.url = url
+        try:
+            response = requests.get(self.api('public_key'))
+        except requests.exceptions.ConnectionError:
+            return False
+
+        if response.status_code != requests.codes.ok:
+            return False
+
+        self.public_key = response.text
+        db.session.commit()
+        return True
 
     def api(self, path):
         url_parts = list(urlparse(self.url))
