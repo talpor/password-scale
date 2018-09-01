@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BIP39 = os.environ.get('BIP39')
 DATABASE_URL = os.environ.get('DATABASE_URL')
