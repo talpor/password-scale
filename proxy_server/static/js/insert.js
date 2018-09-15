@@ -1,4 +1,4 @@
-/* globals WORDLIST, JSEncrypt */
+/* globals WORDLIST, forge */
 
 const getForm = () => document.getElementById('InsertForm')
 
@@ -50,18 +50,13 @@ const generateRandomPassword = event => {
 
 const createSecret = event => {
     event.preventDefault()
-
-    const encrypt = new JSEncrypt({
-        default_public_exponent: 65537
-    })
     const form = getForm()
-
-    encrypt.setPublicKey(form.elements.public_key.value)
-    const msg = encrypt.encrypt(form.elements.secret.value)
+    const publicKey = forge.pki.publicKeyFromPem(form.elements.public_key.value)
+    const msg = publicKey.encrypt(form.elements.secret.value, 'RSA-OAEP');
 
     if (msg) {
-        // form.elements.secret.value = msg
-        // form.elements.encrypted.checked = true
+        form.elements.secret.value = forge.util.encode64(msg)
+        form.elements.encrypted.checked = true
         form.submit()
     } else {
         alert('error while encrypting')

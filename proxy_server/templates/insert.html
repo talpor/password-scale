@@ -27,7 +27,7 @@
 {% endblock %}
 {% block scripts %}
 {% assets "js_insert" %}
-<script src="{{ url_for('static', filename='lib/jsencrypt/bin/jsencrypt.min.js') }}"></script>
+<script src="{{ url_for('static', filename='lib/node-forge/dist/forge.min.js') }}"></script>
 <script src="{{ ASSET_URL }}"></script>
 {% endassets %}
 {% endblock %}
