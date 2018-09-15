@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
 from urllib.parse import urlencode
 
-from environ import SLACK_APP_ID
+from environ import SLACK_CLIENT_ID
 
 privacy_view = Blueprint('privacy', __name__)
 landing_view = Blueprint('page_not_found', __name__)
@@ -11,7 +11,7 @@ landing_view = Blueprint('page_not_found', __name__)
 def landing():
     authorize_url = '{}{}'.format(
         'https://slack.com/oauth/authorize?', urlencode({
-            'client_id': SLACK_APP_ID,
+            'client_id': SLACK_CLIENT_ID,
             'scope': 'commands'
         })
     )

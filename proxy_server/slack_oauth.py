@@ -3,7 +3,7 @@ import requests
 from flask import Blueprint, abort, request, render_template
 from urllib.parse import urlencode
 
-from environ import SLACK_APP_ID, SLACK_APP_SECRET
+from environ import SLACK_CLIENT_ID, SLACK_CLIENT_SECRET
 from server import db, Team, sentry
 
 
@@ -17,8 +17,8 @@ def slack_oauth():
 
     oauth_access_url = '{}{}'.format(
         'https://slack.com/api/oauth.access?', urlencode({
-            'client_id': SLACK_APP_ID,
-            'client_secret': SLACK_APP_SECRET,
+            'client_id': SLACK_CLIENT_ID,
+            'client_secret': SLACK_CLIENT_SECRET,
             'code': request.args['code']
         })
     )

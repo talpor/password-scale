@@ -11,7 +11,8 @@
 
 - Create a virtual environment `mkvirtualenv password-scale-ps -p python3`
 - Install dependencies `pip install -r requirements/proxy-server.txt`
-- Create _proxy_server/.env_ file based on _proxy_server/example.env_
+- Create _proxy_server/.env_ file based on _proxy_server/example.env
+- Create the database specified in _DATABASE_URL_ and create the scheme doing `import server; server.db.create_all()` from a python shell in _proxy_server_ directory
 - Run the server using the command `python proxy_server` for development or `gunicorn --bind 0.0.0.0:8000 wsgi` for production
 
 ## Running using docker
@@ -28,6 +29,6 @@
 | DATABASE_URL | Database URL where is stored the password storage server addresses of each client |
 | SENTRY_DSN | Configuration required by the Sentry SDKs |
 | SITE | URL of this server, it is used by the command to show the insert password editor URL |
-| SLACK_APP_ID | Slack APP ID |
-| SLACK_APP_SECRET | Slack APP Secret |
+| SLACK_CLIENT_ID | Slack Client ID |
+| SLACK_CLIENT_SECRET | Slack APP Secret |
 | VERIFICATION_TOKEN | Slack Verification Token |
