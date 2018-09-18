@@ -4,7 +4,7 @@ import sys
 from mocks import CacheMock, RequestsMock, PasswordScaleCMDMock, CryptoMock
 from urllib.parse import urlencode
 from fixtures import (
-    client_fixture, RequestData, VERIFICATION_TOKEN, SITE, SLACK_APP_ID
+    client_fixture, RequestData, VERIFICATION_TOKEN, SITE, SLACK_CLIENT_ID
 )
 
 sys.path.insert(0, os.path.join(sys.path[0], '..', 'proxy_server'))  # noqa
@@ -255,9 +255,8 @@ def test__landing__deny_post(client):
 
 def test__landing__show_add_to_slack_button(client):
     rv = client.get('/')
-    assert bytes('{}{}'.format(
-        'https://slack.com/oauth/authorize?', urlencode({
-            'client_id': SLACK_APP_ID
+    assert bytes('https://slack.com/oauth/authorize?{}'.format(urlencode({
+            'client_id': SLACK_CLIENT_ID
         })), 'utf-8') in rv.data
 
 

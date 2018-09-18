@@ -14,8 +14,8 @@ def encrypt(message, public_key):
 
 
 def decrypt(encrypted_message, private_key):
-    rsakey = RSA.importKey(private_key)
-    cipher = PKCS1_OAEP.new(rsakey)
+    rsa_key = RSA.importKey(private_key)
+    cipher = PKCS1_OAEP.new(rsa_key)
     try:
         return cipher.decrypt(base64.b64decode(encrypted_message))
     except binascii.Error:

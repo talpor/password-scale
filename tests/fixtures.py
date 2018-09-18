@@ -7,7 +7,7 @@ from mocks import RequestsMock, PasswordScaleCMDMock
 
 VERIFICATION_TOKEN = '111111111111111111111111'
 SITE = 'https://scale.talpor.com'
-SLACK_APP_ID = '1111111111.111111111111'
+SLACK_CLIENT_ID = '1111111111.111111111111'
 
 os.environ['BIP39'] = (
     'music always draft before scatter capital '
@@ -17,8 +17,8 @@ os.environ['DATABASE_URL'] = 'sqlite://'
 os.environ['DEMO_SERVER'] = 'https://11111111.talpor.com'
 os.environ['SENTRY_DSN'] = ''
 os.environ['SITE'] = SITE
-os.environ['SLACK_APP_ID'] = SLACK_APP_ID
-os.environ['SLACK_APP_SECRET'] = '11111111111111111111111111111111'
+os.environ['SLACK_CLIENT_ID'] = SLACK_CLIENT_ID
+os.environ['SLACK_CLIENT_SECRET'] = '11111111111111111111111111111111'
 os.environ['VERIFICATION_TOKEN'] = VERIFICATION_TOKEN
 sys.path.insert(0, os.path.join(sys.path[0], '..', 'proxy_server'))
 
