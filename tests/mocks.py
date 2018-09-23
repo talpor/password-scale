@@ -1,7 +1,8 @@
-from mock import Mock
 import base64
 import decorator
+import pickle
 import requests
+from mock import Mock
 
 
 class MockRequest(object):
@@ -88,10 +89,10 @@ class CacheMock(object):
     def has_token(self, func):
         def func_wrapper(func, *args, **kwargs):
             self.app.cache = dict()
-            self.app.cache[self.token] = {
+            self.app.cache[self.token] = pickle.dumps({
                 'path': '',
                 'team_id': 1
-            }
+            })
             return func(*args, **kwargs)
         return decorator.decorator(func_wrapper, func)
 

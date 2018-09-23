@@ -1,4 +1,5 @@
 import os
+import pickle
 import re
 import sys
 
@@ -18,8 +19,10 @@ def insert(token):
     if token not in cache:
         abort(400 if request.method == 'POST' else 404)
 
-    path = cache[token]['path']
-    team_id = cache[token]['team_id']
+    obj = pickle.loads(cache[token])
+
+    path = obj['path']
+    team_id = obj['team_id']
     team = db.session.query(Team).filter_by(id=team_id).first()
 
     if request.method == 'POST':

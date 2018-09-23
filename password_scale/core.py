@@ -1,7 +1,8 @@
 from contrib.crypto import decrypt
 
-import requests
+import pickle
 import random
+import requests
 import string
 
 ERRMSG = 'Communication problem with the remote server'
@@ -37,23 +38,24 @@ class PasswordScaleCMD(object):
         token = ''.join(random.SystemRandom().choice(
             string.ascii_uppercase + string.digits) for _ in range(6))
 
-        self.cache.set(token, {
+        self.cache.set(token, pickle.dumps({
             'path': '{}/{}'.format(channel, app),
             'team_id': team.id,
             'url': team.api('insert')
-        }, expire=900)  # expires in 15 minutes
+         }), 900)  # expires in 15 minutes
 
         return token
 
     def insert(self, token, secret):
-        path = self.cache[token]['path']
-        url = self.cache[token]['url']
+        obj = pickle.loads(self.cache[token])
+        path = obj['path']
+        url = obj['url']
         response = requests.post(url, data={'path': path, 'secret': secret})
 
         if response.status_code != requests.codes.ok:
             raise PasswordScaleError(
                 'Error {}: {}'.format(response.status_code, ERRMSG))
-        del self.cache[token]
+        self.cache.delete([token])
 
     def remove(self, team, channel, app):
         response = requests.post(

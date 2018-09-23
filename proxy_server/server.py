@@ -1,9 +1,9 @@
 import os
+import redis
 import requests
 import sys
 
 from datetime import datetime
-from diskcache import Cache
 from flask import Flask
 from flask_assets import Environment, Bundle
 from flask_sqlalchemy import SQLAlchemy
@@ -26,7 +26,7 @@ server.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 server.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 assets = Environment(server)
-cache = Cache('/tmp/tokencache')
+cache = redis.StrictRedis(host='redis', port=6379)
 sentry = Sentry(server, dsn=SENTRY_DSN)
 
 cmd = PasswordScaleCMD(cache, private_key)
