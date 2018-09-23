@@ -52,9 +52,14 @@ const createSecret = event => {
     event.preventDefault()
     const form = getForm()
     const publicKey = forge.pki.publicKeyFromPem(form.elements.public_key.value)
-    const msg = publicKey.encrypt(form.elements.secret.value, 'RSA-OAEP');
+    const msg = publicKey.encrypt(form.elements.secret.value, 'RSA-OAEP')
 
     if (msg) {
+        document.body.classList.add('wait')
+        const elements = ['create', 'generator1', 'generator2', 'secret']
+        elements.map(function(x) {
+            form.elements[x].setAttribute('disabled', true)
+        })
         form.elements.secret.value = forge.util.encode64(msg)
         form.elements.encrypted.checked = true
         form.submit()

@@ -1,4 +1,4 @@
-@import "vars";
+@import 'vars';
 
 #Insert {
     .center {
@@ -48,6 +48,20 @@
         }
     }
     .hidden {
+        display: none;
+    }
+}
+
+body.wait {
+    cursor: wait;
+    form,
+    textarea,
+    input,
+    button {
+        cursor: wait !important;
+        user-select: none;
+    }
+    .counter {
         display: none;
     }
 }
