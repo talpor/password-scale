@@ -1,14 +1,36 @@
 version: '3'
+
+volumes:
+  database:
+
 services:
   web:
     build: .
     environment:
-      - DEMO_SERVER=${DEMO_SERVER}
-      - SITE=${SITE}
-      - VERIFICATION_TOKEN=${VERIFICATION_TOKEN}
-      - DATABASE_URL=${DATABASE_URL}
       - BIP39=${BIP39}
-      - SLACK_APP_SECRET=${SLACK_APP_SECRET}
+      - DATABASE_URL=${DATABASE_URL}
+      - DEMO_SERVER=${DEMO_SERVER}
       - SENTRY_DSN=${SENTRY_DSN}
+      - SITE=${SITE}
+      - SLACK_APP_ID=${SLACK_APP_ID}
+      - SLACK_CLIENT_ID=${SLACK_CLIENT_ID}
+      - SLACK_CLIENT_SECRET=${SLACK_CLIENT_SECRET}
+      - VERIFICATION_TOKEN=${VERIFICATION_TOKEN}
     ports:
      - 8000:8000
+
+  database:
+    image: postgres:10.5
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=scaledb
+      - POSTGRES_USER=scaledb
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - database:/var/lib/postgresql/data/pgdata
+    network_mode: "service:web"
+
+  redis:
+    image: redis:4-alpine
+    restart: unless-stopped

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template
 from urllib.parse import urlencode
 
-from environ import SLACK_CLIENT_ID
+from environ import SLACK_APP_ID, SLACK_CLIENT_ID
 
 privacy_view = Blueprint('privacy', __name__)
 landing_view = Blueprint('page_not_found', __name__)
@@ -16,7 +16,8 @@ def landing():
         })
     )
 
-    return render_template('landing.html', authorize_url=authorize_url)
+    return render_template(
+        'landing.html', authorize_url=authorize_url, app_id=SLACK_APP_ID)
 
 
 @privacy_view.route('', methods=['GET'])
