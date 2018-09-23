@@ -10,6 +10,7 @@ services:
       - BIP39=${BIP39}
       - DATABASE_URL=${DATABASE_URL}
       - DEMO_SERVER=${DEMO_SERVER}
+      - REDIS_HOST=redis
       - SENTRY_DSN=${SENTRY_DSN}
       - SITE=${SITE}
       - SLACK_APP_ID=${SLACK_APP_ID}

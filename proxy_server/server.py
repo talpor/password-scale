@@ -10,7 +10,7 @@ from flask_sqlalchemy import SQLAlchemy
 from raven.contrib.flask import Sentry
 from urllib.parse import urlparse, urlunparse
 
-from environ import BIP39, DATABASE_URL, SENTRY_DSN
+from environ import BIP39, DATABASE_URL, SENTRY_DSN, REDIS_HOST
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))
 from contrib.crypto import generate_key  # noqa
@@ -26,7 +26,7 @@ server.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 server.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 assets = Environment(server)
-cache = redis.StrictRedis(host='redis', port=6379)
+cache = redis.StrictRedis(host=REDIS_HOST, port=6379)
 sentry = Sentry(server, dsn=SENTRY_DSN)
 
 cmd = PasswordScaleCMD(cache, private_key)
