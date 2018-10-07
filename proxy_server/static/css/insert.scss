@@ -24,6 +24,10 @@
         border-radius: 4px;
         resize: vertical;
         height: auto;
+        &:read-only {
+            background-color: $lighter-gray;
+            color: $gray;
+        }
     }
     .actions {
         margin-top: 15px;

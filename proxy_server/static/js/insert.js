@@ -56,11 +56,12 @@ const createSecret = event => {
 
     if (msg) {
         document.body.classList.add('wait')
-        const elements = ['create', 'generator1', 'generator2', 'secret']
+        const elements = ['create', 'generator1', 'generator2']
         elements.map(function(x) {
             form.elements[x].setAttribute('disabled', true)
         })
         form.elements.secret.value = forge.util.encode64(msg)
+        form.elements.secret.setAttribute('readonly', true)
         form.elements.encrypted.checked = true
         form.submit()
     } else {
