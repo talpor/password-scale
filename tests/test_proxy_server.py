@@ -245,7 +245,7 @@ def test__oauth_endpoint__success_message(client):
 def test__landing__render(client):
     rv = client.get('/')
     assert rv.status_code == 200
-    assert bytes('<title>Password Scale</title>', 'utf-8') in rv.data
+    assert bytes('<title>Password Scale', 'utf-8') in rv.data
 
 
 def test__landing__deny_post(client):
