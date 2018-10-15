@@ -17,6 +17,7 @@ services:
       - SLACK_CLIENT_ID=${SLACK_CLIENT_ID}
       - SLACK_CLIENT_SECRET=${SLACK_CLIENT_SECRET}
       - VERIFICATION_TOKEN=${VERIFICATION_TOKEN}
+    restart: unless-stopped
     ports:
      - 8000:8000
 
