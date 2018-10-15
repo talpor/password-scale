@@ -20,8 +20,14 @@ class PasswordScaleCMD(object):
             response = requests.post(team.api('list/{}'.format(channel)))
         except requests.exceptions.ConnectionError:
             raise PasswordScaleError('Timeout: {}'.format(ERRMSG))
+        size = 344  # assuming 2048 bits key
 
-        msg = decrypt(response.text, self.private_key)
+        msg = b''.join(
+            decrypt(
+                response.text[i:i+size],
+                self.private_key
+            ) for i in range(0, len(response.text), size))
+
         if msg == b'':
             return ''
         elif msg is None:

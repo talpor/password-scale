@@ -98,6 +98,7 @@ def get_onetime_link():
 @server.route('/list/<prefix>', methods=['POST'])
 def list(prefix):
     output = ''
+    chunk_size = 214  # assuming 2048 bits key
     try:
         bucket = s3.list_objects(Bucket=PASSWORD_STORAGE, Prefix=prefix)
     except ClientError as e:
@@ -112,8 +113,13 @@ def list(prefix):
                 if not re.match('.+\/\.\w+', x['Key'])
             ])
 
+    output = str.encode(output)
     encryption_key = _get_encryption_key()
-    return encrypt(output, encryption_key)
+
+    return b''.join([
+        encrypt(output[i:i+chunk_size], encryption_key, True)
+        for i in range(0, len(output), chunk_size)
+    ])
 
 
 @server.route('/insert', methods=['POST'])

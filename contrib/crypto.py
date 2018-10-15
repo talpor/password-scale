@@ -7,10 +7,12 @@ import base64
 import binascii
 
 
-def encrypt(message, public_key):
+def encrypt(message, public_key, encoded=False):
     rsa_key = RSA.importKey(public_key)
     cipher = PKCS1_OAEP.new(rsa_key)
-    return base64.b64encode(cipher.encrypt(str.encode(message)))
+    if not encoded:
+        message = str.encode(message)
+    return base64.b64encode(cipher.encrypt(message))
 
 
 def decrypt(encrypted_message, private_key):
