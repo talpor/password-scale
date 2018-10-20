@@ -4,8 +4,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BIP39 = os.environ.get('BIP39')
+CONFIGURATION_GUIDE_URL = os.environ.get(
+  'CONFIGURATION_GUIDE_URL', 'https://scale.talpor.com/configure'
+)
 DATABASE_URL = os.environ.get('DATABASE_URL')
 DEMO_SERVER = os.environ.get('DEMO_SERVER', 'http://0.0.0.0:8090/')
+SECURE_SERVER = os.environ.get('SECURE_SERVER', 'http://0.0.0.0:8090/')
 SENTRY_DSN = os.environ.get('SENTRY_DSN')
 SITE = os.environ.get('SITE')
 SLACK_APP_ID = os.environ.get('SLACK_APP_ID', 'ABBQRPAUC')

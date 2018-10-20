@@ -6,7 +6,7 @@ import validators
 from flask import Blueprint, abort, request
 
 from server import db, Team
-from environ import DEMO_SERVER, VERIFICATION_TOKEN
+from environ import DEMO_SERVER, SECURE_SERVER, VERIFICATION_TOKEN
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))  # noqa
 from contrib.slack import error, success, info
@@ -63,6 +63,19 @@ def action_api():
                 'The testing server is already configured! remember that '
                 'the data on this server can be deleted without prior '
                 'notice, when you want to configure your company server '
-                'you should only execute the command `/pass register` along '
+                'you should only execute the command `/pass configure` along '
                 'with the url of your the server.'
+            )
+
+        elif action == 'use_secure_server':
+            if not team.register_server(SECURE_SERVER):
+                return error(
+                    'An error occurred registering the server, '
+                    'please try later.'
+                )
+            return success(
+                'The secure server is already configured! you can start using '
+                'the /pass command,  for more information about the pass '
+                'command working check `/pass help` or our web page in '
+                'https://scale.talpor.com'
             )

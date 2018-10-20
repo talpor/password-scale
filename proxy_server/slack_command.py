@@ -6,7 +6,7 @@ import re
 from flask import Blueprint, abort, request, jsonify
 
 from server import db, Team, cmd
-from environ import VERIFICATION_TOKEN, SITE
+from environ import CONFIGURATION_GUIDE_URL, VERIFICATION_TOKEN, SITE
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))  # noqa
 from contrib.slack import warning, error, success, info
@@ -78,7 +78,7 @@ def api():
                 'short': True
             },
             {
-                'title': '`/pass register <password_server_url>`',
+                'title': '`/pass configure` or `/pass configure <server_url>`',
                 'value': (
                     'To setup the password storage, it is only necessary '
                     'to execute it once.'
@@ -98,18 +98,18 @@ def api():
             ]
         })
 
-    if command[0] == 'register' and len(command) == 2:
+    if command[0] == 'configure' and len(command) == 2:
         url = command[1]
         if not validators.url(url):
             return error('Invalid URL format, use: https://<domain>')
 
         if team.url:
-            msg = ('This team is already registered, you want to replace '
+            msg = ('This team is already configured, you want to replace '
                    'the password server?')
             return jsonify({
                 'attachments': [
                     {
-                        'fallback': 'This team alread`y registered',
+                        'fallback': 'This team already configured',
                         'text': msg,
                         'callback_id': 'configure_password_server',
                         'color': 'warning',
@@ -138,38 +138,40 @@ def api():
                 'from the server'.format(team_domain)
             )
 
-        return success('{} team successfully registered!'.format(team_domain))
+        return success('{} team successfully configured!'.format(team_domain))
 
-    if not team.url:
-        msg = (
-            '*{}* team does not have a password server registered, use '
-            'the command `/pass register https://your.password.server` '
-            'to configure yours.'.format(team_domain)
-        )
+    if command[0] == 'configure' and len(command) == 1 or not team.url:
+        color = 'warning'
+        if team.url:
+            msg = (
+                '*{}* team already have a server configured, if you want to '
+                'swap select some of the options below'.format(team.name)
+            )
+        elif command[0] == 'configure':
+            color = 'good'
+            msg = 'What type of server do you want to use?'
+        else:
+            msg = (
+                '*{}* team does not have a password server configured, select '
+                'one of the options below to start.'.format(
+                    team_domain)
+            )
+
         warning_msg = (
-            'The idea of the testing server is that you be able to try '
-            'the _Password Scale_ command working. For daily use among '
-            'the team members is necessary to configure your own. '
-            '*Any information stored on this server can be deleted at '
-            'any moment without prior notice!*'
+            'This is a test server, any information stored on this server '
+            'can be deleted at any moment without prior notice!'
         )
         return jsonify({
             'attachments': [
                 {
                     'fallback': msg,
                     'text': msg,
-                    'color': 'warning',
+                    'color': color,
                     'callback_id': 'configure_password_server',
                     'actions': [
                         {
-                            'text': 'Check the configuration guide',
-                            'type': 'button',
-                            'url': ('https://github.com/talpor/'
-                                    'password-scale/blob/master/README.md')
-                        },
-                        {
                             'name': 'use_demo_server',
-                            'text': 'Use testing server',
+                            'text': 'Use Test Server',
                             'type': 'button',
                             'value': 'no',
                             'confirm': {
@@ -178,6 +180,17 @@ def api():
                                 'ok_text': 'I understand',
                                 'dismiss_text': 'No'
                             }
+                        },
+                        {
+                            'name': 'use_secure_server',
+                            'text': 'Use Secure Server',
+                            'type': 'button',
+                            'value': 'no'
+                        },
+                        {
+                            'text': 'Something else...',
+                            'type': 'button',
+                            'url': CONFIGURATION_GUIDE_URL
                         },
                         {
                             'name': 'no_configure',
@@ -189,13 +202,6 @@ def api():
                 }
             ]
         })
-        return warning(
-            '{} team does not have a password server registered, use '
-            'the command `/pass register https://your.password.server` '
-            'to start, check the configuration guide -> '
-            'https://github.com/talpor/password-scale/blob/master'
-            '/README.md'.format(team_domain)
-        )
     if command[0] in ['', 'list']:
         try:
             dir_ls = cmd.list(team, channel)
