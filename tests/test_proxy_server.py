@@ -57,34 +57,34 @@ def test__api_endpoint__require_valid_team(client):
 def test__api_endpoint__require_password_server(client):
     data = RequestData(add_team=True)
     rv = client.post('/slack/command', data=vars(data))
-    assert b'team does not have a password server registered' in rv.data
+    assert b'team does not have a password server configured' in rv.data
 
 
 @requests_mock.get_public_key
-def test__api_endpoint__register(client):
-    data = RequestData(text='register https://my-password-server.com',
+def test__api_endpoint__configure(client):
+    data = RequestData(text='configure https://my-password-server.com',
                        add_team=True)
 
     rv = client.post('/slack/command', data=vars(data))
-    assert b'team successfully registered' in rv.data
+    assert b'team successfully configured' in rv.data
 
 
 @requests_mock.get_public_key
-def test__api_endpoint__register_multiple_times(client):
-    data1 = RequestData(text='register https://my-password-server.com',
+def test__api_endpoint__configure_multiple_times(client):
+    data1 = RequestData(text='configure https://my-password-server.com',
                         add_team=True)
-    data2 = RequestData(text='register https://my-new-password-server.com')
+    data2 = RequestData(text='configure https://my-new-password-server.com')
     data2.team_id = data1.team_id
 
     client.post('/slack/command', data=vars(data1))
     rv = client.post('/slack/command', data=vars(data2))
 
-    assert b'This team is already registered, you want to replace' in rv.data
+    assert b'This team is already configured, you want to replace' in rv.data
 
 
-def test__api_endpoint__register_using_bad_url(client):
-    data1 = RequestData(text='register this-is-not-an-url', add_team=True)
-    data2 = RequestData(text='register url-without-protocol.io', add_team=True)
+def test__api_endpoint__configure_using_bad_url(client):
+    data1 = RequestData(text='configure this-is-not-an-url', add_team=True)
+    data2 = RequestData(text='configure url-without-protocol.io', add_team=True)
 
     rv = client.post('/slack/command', data=vars(data1))
     assert b'Invalid URL format' in rv.data

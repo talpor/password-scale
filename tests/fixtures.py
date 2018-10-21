@@ -55,7 +55,7 @@ class RequestData(object):
                 raise Exception('client is required for register')
             self.client.post('/slack/command', data={
                 **vars(self),
-                **{'text': 'register https://dummy-password-server.com'}
+                **{'text': 'configure https://dummy-password-server.com'}
             })
 
     def __init__(
