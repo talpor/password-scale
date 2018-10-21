@@ -32,7 +32,7 @@ body {
         background-image: linear-gradient(to right, #3e9dec, #4b54cb);
         height: 4px;
     }
-    header {
+    > header {
         background-image: linear-gradient(to right, #3e9dec, #4b54cb);
         height: 37px;
         .logo {
@@ -125,5 +125,27 @@ body {
     textarea,
     button {
         font-family: $sans;
+    }
+}
+
+@media (max-device-width: 1140px) {
+    body {
+        font-size: 25px;
+        > header {
+            height: 70px;
+            font-size: 1.5em;
+            .logo {
+                width: 97px;
+            }
+        }
+        .container.hd {
+            width: 90%;
+        }
+    }
+}
+
+@media (max-device-width: 700px) {
+    body {
+        font-size: 30px;
     }
 }
