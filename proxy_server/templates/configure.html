@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Password Scale - Configuration{% endblock %}
+
+{% with hd=True %}
+{% include '_header.html' %}
+{% endwith %}
+
+{% block content %}
+<div id="Configure" class="container">
+    <h1>Configuration Options</h1>
+    <h2>Choosing the right server for your business</h2>
+
+    <p>When you run the configure command <code>/pass configure</code> you have three options to setup your server, they are described below:</p>
+
+    <div class="flex main">
+        <div class="col">
+            <h3>Test server</h3>
+
+            <p class="description">This server is thinking for create and retrive dummy passwords in order to try the pass command workflow without the concerns of have to delete all the dummy data after that, this storage server is not permanent and the server is cleanup weekly.
+            </p>
+            <h4>It is ideal for:</h4>
+
+            <ul>
+                <li>Play and familiarize with the pass command</li>
+            </ul>
+
+            <p>To setup this server execute the command <code>/pass configure</code> on any slack group and select the option <span class="slack-btn">Use Testing Server</span> when you are done with your testing you can run the configure command again and pick another server.
+            </p>
+        </div>
+
+        <div class="col">
+            <h3>Secure Server</h3>
+
+            <p class="description">This this our own maintained password server, this is a free and easy to setup password server, this is thinking to be used for many teams but each secret storage is only accesible for the creator team with the same security than the private servers but in this case the private key is unknow for any party more than us.
+            </p>
+            <h4>It is ideal for:</h4>
+
+            <ul>
+                <li>Share wi-fi passwords and others office scope passoword between the team members</li>
+                <li>Share user and password for non critical services between the team members</li>
+            </ul>
+
+            <p>To setup this server execute the command <code>/pass configure</code> on any slack group and select the option <span class="slack-btn">Use Secure Server</span> if you want to upgrade in any moment to a Private Server you can run the configure command to setup it.
+            </p>
+        </div>
+
+        <div class="col">
+            <h3>Private Server</h3>
+
+            <p class="description">You can deploy your own private server, doing this you will have the total control an resposability of your private key, this is the most secure way to store your passwords without have to trust in any party to encrypt and decrypt them.
+            </p>
+            <h4>It is ideal for:</h4>
+
+            <ul>
+                <li>All the Secure Server mentioned uses.</li>
+                <li>Share access credential for company servers</li>
+                <li>Share user and password for critical services between the team members</li>
+            </ul>
+
+            <p>To deploy a private server follow the <a href="https://github.com/talpor/password-scale#how-to-deploy-your-own-password-server" target="_blank">github guide</a> or <a href="#ContactForm">contact us</a> to quote a configuration. When you have your server up you will need to run the command <code>/pass configure &lt;private-server-url&gt;</code> on any slack group to start using it.
+                </your-private-server>
+            </p>
+        </div>
+    </div>
+    {% with title="Contact Us" %}
+    {% include 'landing/_contact_form.html' %}
+    {% endwith %}
+</div>
+{% endblock %}

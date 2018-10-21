@@ -38,6 +38,7 @@ all_css = Bundle(
     'css/insert.scss',
     'css/landing.scss',
     'css/privacy.scss',
+    'css/configure.scss',
     filters='node-scss',
     output='dist/all.css'
 )

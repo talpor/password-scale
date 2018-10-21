@@ -3,8 +3,9 @@ from urllib.parse import urlencode
 
 from environ import SLACK_APP_ID, SLACK_CLIENT_ID
 
-privacy_view = Blueprint('privacy', __name__)
+configure_view = Blueprint('configure', __name__)
 landing_view = Blueprint('page_not_found', __name__)
+privacy_view = Blueprint('privacy', __name__)
 
 
 @landing_view.route('', methods=['GET'])
@@ -23,3 +24,8 @@ def landing():
 @privacy_view.route('', methods=['GET'])
 def privacy():
     return render_template('privacy.html')
+
+
+@configure_view.route('', methods=['GET'])
+def configure():
+    return render_template('configure.html')

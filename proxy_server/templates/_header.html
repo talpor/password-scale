@@ -1,5 +1,5 @@
 <header>
-    <div class="container">
+    <div class="container {{"hd" if hd else ""}}">
         <img class="logo" src="{{ url_for('static', filename='img/logo.svg') }}" alt="scale-logo">
         <div class="links">
             <a href="/">Home</a>

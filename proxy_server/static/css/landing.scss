@@ -1,10 +1,9 @@
-@import "vars";
+@import 'vars';
 
 $header-text-color: white;
 
 #Landing {
     .container {
-        width: 960px;
         width: 1080px;
     }
     .flex {
@@ -18,7 +17,7 @@ $header-text-color: white;
     }
     header {
         background-color: $blue;
-        background-image: url("/static/img/bg.png");
+        background-image: url('/static/img/bg.png');
         background-position-y: center;
         background-size: cover;
         color: $header-text-color;
@@ -281,57 +280,7 @@ $header-text-color: white;
             margin-top: 10px;
         }
     }
-    .contact-form {
-        .container {
-            width: 600px;
-            h4 {
-                margin-top: 50px;
-                text-align: center;
-                font-size: 1.2em;
-                letter-spacing: 0.3em;
-            }
-            .separator {
-                width: 30px;
-                height: 2px;
-                background-color: $blue;
-                margin: 18px auto 8px auto;
-            }
-            form {
-                text-align: center;
-                margin: 0 0 30px 0;
-                input,
-                textarea {
-                    border: 1px solid $light-gray;
-                    line-height: 2;
-                    margin-top: 25px;
-                    padding-left: 10px;
-                    width: 100%;
-                    &:focus {
-                        outline: none !important;
-                        border: 1px solid $blue;
-                        box-shadow: 0 0 10px $light-gray;
-                    }
-                }
-                input {
-                    height: 44px;
-                }
-                textarea {
-                    padding-top: 5px;
-                    line-height: 1.5;
-                    resize: vertical;
-                }
-                button {
-                    background: transparent;
-                    border: 2px solid $blue;
-                    color: $font-color;
-                    font-size: 0.75em;
-                    font-weight: 700;
-                    letter-spacing: 0.2em;
-                    margin: 25px auto;
-                    padding: 0.85em 3.1em;
-                    text-transform: uppercase;
-                }
-            }
-        }
+    .contact-form .container {
+        width: 600px;
     }
 }
