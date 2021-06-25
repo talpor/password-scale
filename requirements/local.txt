@@ -1,6 +1,0 @@
--r ./proxy-server.txt
--r ./storage-server.txt
-
-awsebcli==3.14.1
-ipython
-ipdb

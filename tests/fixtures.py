@@ -20,7 +20,7 @@ os.environ['SITE'] = SITE
 os.environ['SLACK_CLIENT_ID'] = SLACK_CLIENT_ID
 os.environ['SLACK_CLIENT_SECRET'] = '11111111111111111111111111111111'
 os.environ['VERIFICATION_TOKEN'] = VERIFICATION_TOKEN
-sys.path.insert(0, os.path.join(sys.path[0], '..', 'proxy_server'))
+sys.path.insert(0, os.path.join(sys.path[0], '..', 'slack_server'))
 
 from routes import server  # noqa
 from server import Team, db  # noqa

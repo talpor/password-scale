@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "==1.1.4"
+pycrypto = "==2.6.1"
+pytest = "==6.2.4"
+requests = "==2.25.1"
+boto3 = "==1.17.99"
+zappa = "==0.53.0"
+
+[dev-packages]
+ipython = "*"
+ipdb = "*"
+
+[requires]
+python_version = "3.9"

@@ -1,17 +1,16 @@
 import os
-import sys
-import validators
 import re
+import sys
 
-from flask import Blueprint, abort, request, jsonify
+import validators
+from flask import Blueprint, abort, jsonify, request
 
-from server import db, Team, cmd
-from environ import CONFIGURATION_GUIDE_URL, VERIFICATION_TOKEN, SITE
+from environ import CONFIGURATION_GUIDE_URL, SITE, VERIFICATION_TOKEN
+from server import Team, cmd, db
 
 sys.path.insert(1, os.path.join(sys.path[0], '..'))  # noqa
-from contrib.slack import warning, error, success, info
+from contrib.slack import error, info, success, warning
 from password_scale.core import PasswordScaleError
-
 
 view = Blueprint('slack_command', __name__)
 

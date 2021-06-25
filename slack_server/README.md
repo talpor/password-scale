@@ -1,23 +1,21 @@
-# Password Scale - Proxy Server
+# Password Scale - Slack Server
 
 ### Requirements
 
 #### Installed software
-- virtualenv + virtualenvwrapper (https://github.com/brainsik/virtualenv-burrito)
-- python3
+- pipenv
 - docker/docker-compose (optional)
 
 ## Instalation
 
-- Create a virtual environment `mkvirtualenv password-scale-ps -p python3`
-- Install dependencies `pip install -r requirements/proxy-server.txt`
-- Create _proxy_server/.env_ file based on _proxy_server/example.env
-- Create the database specified in _DATABASE_URL_ and create the scheme doing `import server; server.db.create_all()` from a python shell in _proxy_server_ directory
-- Run the server using the command `python proxy_server` for development or `gunicorn --bind 0.0.0.0:8000 wsgi` for production
+- Install requirements `pipenv sync`
+- Create _.env_ file based on _example.env
+- Create the database specified in _DATABASE_URL_ and create the scheme by doing `import server; server.db.create_all()` from a python shell in the enviroment (pipenv run python)
+- Run the server using the command `pipenv run python .` for development or `pipenv run gunicorn --bind 0.0.0.0:8000 wsgi` for production
 
 ## Running using docker
 
-- Create _proxy_server/.env_ file based on _proxy_server/example.env_
+- Create _.env_ file based on _example.env_
 - Run `docker-compose up`
 
 ### Environment variables table

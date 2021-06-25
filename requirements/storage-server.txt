@@ -1,4 +1,0 @@
--r ./base.txt
-
-boto3==1.7.40
-zappa==0.46.1

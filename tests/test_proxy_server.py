@@ -7,7 +7,7 @@ from fixtures import (
     client_fixture, RequestData, VERIFICATION_TOKEN, SITE, SLACK_CLIENT_ID
 )
 
-sys.path.insert(0, os.path.join(sys.path[0], '..', 'proxy_server'))  # noqa
+sys.path.insert(0, os.path.join(sys.path[0], '..', 'slack_server'))  # noqa
 import insert
 import slack_command
 from server import public_key

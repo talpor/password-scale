@@ -1,14 +1,16 @@
-from botocore.exceptions import ClientError
-from flask import Flask, request, abort
-
-from contrib.crypto import generate_key, encrypt, decrypt
-from contrib.onetimesecret import OneTimeCli
-
-import boto3
 import os
 import re
-import requests
+import sys
 import time
+
+import boto3
+import requests
+from botocore.exceptions import ClientError
+from flask import Flask, abort, request
+
+sys.path.insert(1, os.path.join(sys.path[0], ".."))
+from contrib.crypto import decrypt, encrypt, generate_key
+from contrib.onetimesecret import OneTimeCli
 
 server = Flask(__name__)
 
@@ -127,7 +129,7 @@ def insert():
     bucket = PASSWORD_STORAGE
     kargs = {
         'Bucket': bucket,
-        'Body': str.encode(request.form['secret']),  # already encrypted
+        'Body': str.encode(request.form['secret']),  # encrypted secret
         'Key': request.form['path']
     }
     try:

@@ -10,7 +10,6 @@ services:
       - BIP39=${BIP39}
       - DATABASE_URL=${DATABASE_URL}
       - DEMO_SERVER=${DEMO_SERVER}
-      - SECURE_SERVER=${SECURE_SERVER}
       - REDIS_HOST=redis
       - SENTRY_DSN=${SENTRY_DSN}
       - SITE=${SITE}
@@ -18,6 +17,7 @@ services:
       - SLACK_CLIENT_ID=${SLACK_CLIENT_ID}
       - SLACK_CLIENT_SECRET=${SLACK_CLIENT_SECRET}
       - VERIFICATION_TOKEN=${VERIFICATION_TOKEN}
+      - WEBPAGE=${WEBPAGE}
     restart: unless-stopped
     ports:
      - 8000:8000

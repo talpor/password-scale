@@ -1,4 +1,4 @@
-FROM python:3.6-alpine
+FROM python:3.9-alpine
 
 COPY . /app
 
@@ -23,5 +23,5 @@ RUN yarn
 
 EXPOSE 8000
 
-WORKDIR /app/proxy_server
+WORKDIR /app/slack_server
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "wsgi"]
