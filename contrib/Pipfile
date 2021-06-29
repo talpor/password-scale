@@ -5,9 +5,9 @@ name = "pypi"
 
 [packages]
 ipython = "*"
-pycrypto = "*"
 pipenv = "*"
 pytest = "*"
+pycryptodome = "==3.10.1"
 
 [dev-packages]
 
