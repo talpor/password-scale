@@ -29,7 +29,7 @@ def insert(token):
         secret = request.form["secret"]
         encrypted = "encrypted" in request.form
         if not encrypted:
-            # if javascript is disabled then the message comes unencrypted
+            # if javascript is disabled the message comes unencrypted
             secret = encrypt(secret, team.public_key)
         try:
             cmd.insert(token, secret)
@@ -42,10 +42,8 @@ def insert(token):
         )
         return render_template("success.html", message=message)
 
-    else:
-        return render_template(
-            "insert.html",
-            secret=re.sub("[a-zA-Z0-9]+\/", "", path, 1),
-            public_key=team.public_key,
-        )
-    abort(404)
+    return render_template(
+        "insert.html",
+        secret=re.sub("[a-zA-Z0-9]+\/", "", path, 1),
+        public_key=team.public_key,
+    )

@@ -1,15 +1,14 @@
 import json
-import os
-import sys
-import validators
 
+import validators
 from flask import Blueprint, abort, request
 
-from server import db, Team
-from environ import DEMO_SERVER, VERIFICATION_TOKEN
+from environ import DEMO_SERVER
+from server import Team, db
+from utils import error, info, success, valid_slack_request
 
-sys.path.insert(1, os.path.join(sys.path[0], ".."))  # noqa
-from contrib.slack import error, success, info
+# sys.path.insert(1, os.path.join(sys.path[0], ".."))  # noqa
+# from contrib.slack import error, success, info
 
 
 view = Blueprint("slack_action", __name__)
@@ -19,7 +18,8 @@ view = Blueprint("slack_action", __name__)
 def action_api():
     data = request.values.to_dict()
     payload = json.loads(data["payload"])
-    if payload["token"] != VERIFICATION_TOKEN:
+    # if payload["token"] != VERIFICATION_TOKEN:
+    if not valid_slack_request(request):
         return abort(404)
 
     if "actions" not in payload:
@@ -60,16 +60,4 @@ def action_api():
                 "notice, when you want to configure your company server "
                 "you should only execute the command `/pass configure` along "
                 "with the url of your the server."
-            )
-
-        elif action == "use_secure_server":
-            if not team.register_server(DEMO_SERVER):
-                return error(
-                    "An error occurred registering the server, " "please try later."
-                )
-            return success(
-                "The secure server is already configured! you can start using "
-                "the /pass command,  for more information about the pass "
-                "command working check `/pass help` or our web page in "
-                "https://scale.talpor.com"
             )

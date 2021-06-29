@@ -69,7 +69,6 @@ class PasswordScaleCMD(object):
                 "Error {}: {}".format(response.status_code, ERRMSG)
             )
 
-        # self.cache.delete([token])
         self.cache.delete(token)
 
     def remove(self, team, channel, app):
