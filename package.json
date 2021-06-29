@@ -1,5 +1,5 @@
 {
   "dependencies": {
-    "node-forge": "^0.7.6"
+    "node-forge": "^0.10.0"
   }
 }
