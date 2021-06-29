@@ -3,13 +3,13 @@ from flask import Blueprint, render_template
 from environ import WEBPAGE
 
 configure_view = Blueprint("configure", __name__)
-landing_view = Blueprint("page_not_found", __name__)
+root_view = Blueprint("page_not_found", __name__)
 privacy_view = Blueprint("privacy", __name__)
 
 
-@landing_view.route("", methods=["GET"])
-def landing():
-    return render_template("landing.html", redirect_url=WEBPAGE)
+@root_view.route("", methods=["GET"])
+def root():
+    return render_template("root.html", redirect_url=WEBPAGE)
 
 
 @privacy_view.route("", methods=["GET"])

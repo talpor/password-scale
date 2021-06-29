@@ -14,7 +14,7 @@ server.register_blueprint(public_key.view, url_prefix="/public_key")
 server.register_blueprint(slack_action.view, url_prefix="/slack/action")
 server.register_blueprint(slack_command.view, url_prefix="/slack/command")
 server.register_blueprint(slack_oauth.view, url_prefix="/slack/oauth")
-server.register_blueprint(web.landing_view, url_prefix="/")
+server.register_blueprint(web.root_view, url_prefix="/")
 server.register_blueprint(web.privacy_view, url_prefix="/privacy")
 server.register_blueprint(web.configure_view, url_prefix="/configure")
 
