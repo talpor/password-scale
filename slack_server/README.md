@@ -1,4 +1,4 @@
-# Password Scale - Slack Server
+# Slashpass - Slack Server
 
 ### Requirements
 

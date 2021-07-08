@@ -7,10 +7,6 @@ from environ import DEMO_SERVER
 from server import Team, db
 from utils import error, info, success, valid_slack_request
 
-# sys.path.insert(1, os.path.join(sys.path[0], ".."))  # noqa
-# from contrib.slack import error, success, info
-
-
 view = Blueprint("slack_action", __name__)
 
 
@@ -18,7 +14,6 @@ view = Blueprint("slack_action", __name__)
 def action_api():
     data = request.values.to_dict()
     payload = json.loads(data["payload"])
-    # if payload["token"] != VERIFICATION_TOKEN:
     if not valid_slack_request(request):
         return abort(404)
 
@@ -36,7 +31,7 @@ def action_api():
             return success(
                 "Sure! for more information about the pass command working "
                 "check `/pass help` or our web page in "
-                "https://scale.talpor.com"
+                "https://slashpass.co"
             )
 
         team = db.session.query(Team).filter_by(slack_id=payload["team"]["id"]).first()

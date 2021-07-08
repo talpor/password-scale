@@ -1,22 +1,24 @@
-from flask import Blueprint, render_template
+import pickle
 
-from environ import WEBPAGE
+from flask import Blueprint, abort, render_template
 
-configure_view = Blueprint("configure", __name__)
-root_view = Blueprint("page_not_found", __name__)
-privacy_view = Blueprint("privacy", __name__)
+from environ import HOMEPAGE
+from server import Team, cache, db
+
+root_view = Blueprint("root", __name__)
+insert_view = Blueprint("insert_view", __name__)
 
 
 @root_view.route("", methods=["GET"])
 def root():
-    return render_template("root.html", redirect_url=WEBPAGE)
+    return render_template("redirect.html", redirect_url=HOMEPAGE)
 
-
-@privacy_view.route("", methods=["GET"])
-def privacy():
-    return render_template("privacy.html")
-
-
-@configure_view.route("", methods=["GET"])
-def configure():
-    return render_template("configure.html")
+@insert_view.route("/<token>", methods=["GET"])
+def insert(token):
+    token = str(token)
+    if token not in cache:
+        abort(404)
+    obj = pickle.loads(cache[token])
+    team_id = obj["team_id"]
+    team = db.session.query(Team).filter_by(id=team_id).first()
+    return render_template("redirect.html", redirect_url="{}/insert/{}".format(team.url, token))

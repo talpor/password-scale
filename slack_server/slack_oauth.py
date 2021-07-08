@@ -30,8 +30,7 @@ def slack_oauth():
     slack_id = response['team_id']
 
     if not db.session.query(Team).filter_by(slack_id=slack_id).first():
-        # not storing the `access_token` by design, may be will be useful
-        # for a future feature but right now it is not necessary
+        # not storing the `access_token` at this time is not necessary
         new_team = Team(
             slack_id=slack_id,
             name=response['team_name']

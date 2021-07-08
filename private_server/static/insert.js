@@ -85,7 +85,7 @@ const updateUI = event => {
     }
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     const form = getForm()
     // bind events
     form.elements.generator1.onclick = generateHumanReadableRandomPassword
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
     form.elements.create.onclick = createSecret
     form.elements.secret.onkeyup = updateUI
     form.elements.secret.onchange = updateUI
-    // enable generator buttons
+    // enable buttons
     form.elements.generator1.removeAttribute('disabled')
     form.elements.generator2.removeAttribute('disabled')
 })

@@ -1,20 +1,16 @@
 import os
-import sys
 from datetime import datetime
 from urllib.parse import urlparse, urlunparse
 
 import redis
 import requests
 from flask import Flask
-from flask_assets import Bundle, Environment
 from flask_sqlalchemy import SQLAlchemy
 from raven.contrib.flask import Sentry
+from rsa import generate_key
 
+from core import SlashpassCMD
 from environ import BIP39, DATABASE_URL, REDIS_HOST, SENTRY_DSN
-
-sys.path.insert(1, os.path.join(sys.path[0], ".."))
-from contrib.crypto import generate_key  # noqa
-from password_scale.core import PasswordScaleCMD  # noqa
 
 secret_key = generate_key(BIP39)
 private_key = secret_key.exportKey("PEM")
@@ -24,27 +20,11 @@ server = Flask(__name__)
 server.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_URL
 server.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-assets = Environment(server)
 cache = redis.StrictRedis(host=REDIS_HOST, port=6379)
 sentry = Sentry(server, dsn=SENTRY_DSN)
 
-cmd = PasswordScaleCMD(cache, private_key)
+cmd = SlashpassCMD(cache, private_key)
 db = SQLAlchemy(server)
-
-all_css = Bundle(
-    "css/reset.scss",
-    "css/base.scss",
-    "css/insert.scss",
-    "css/privacy.scss",
-    "css/configure.scss",
-    filters="node-scss",
-    output="dist/all.css",
-)
-insert_js = Bundle(
-    "js/wordlist.js", "js/insert.js", filters="babel", output="dist/scripts.js"
-)
-assets.register("css_all", all_css)
-assets.register("js_insert", insert_js)
 
 
 class Team(db.Model):

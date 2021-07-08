@@ -3,22 +3,22 @@ import random
 import string
 
 import requests
-from contrib.crypto import decrypt
+from rsa import decrypt
 
 ERRMSG = "Communication problem with the remote server"
 
 
-class PasswordScaleError(Exception):
+class SlashpassError(Exception):
     def __init__(self, message):
         self.message = message
 
 
-class PasswordScaleCMD(object):
+class SlashpassCMD(object):
     def list(self, team, channel):
         try:
             response = requests.post(team.api("list/{}".format(channel)))
         except requests.exceptions.ConnectionError:
-            raise PasswordScaleError("Timeout: {}".format(ERRMSG))
+            raise SlashpassError("Timeout: {}".format(ERRMSG))
         size = 344  # assuming 2048 bits key
 
         msg = b"".join(
@@ -29,7 +29,7 @@ class PasswordScaleCMD(object):
         if msg == b"":
             return ""
         elif msg is None:
-            raise PasswordScaleError("Decryption error")
+            raise SlashpassError("Decryption error")
 
         item_list = msg.decode("utf-8")
         n = item_list.count(channel)
@@ -65,7 +65,7 @@ class PasswordScaleCMD(object):
         response = requests.post(url, data={"path": path, "secret": secret})
 
         if response.status_code != requests.codes.ok:
-            raise PasswordScaleError(
+            raise SlashpassError(
                 "Error {}: {}".format(response.status_code, ERRMSG)
             )
 
@@ -90,7 +90,7 @@ class PasswordScaleCMD(object):
         elif response.status_code == requests.codes.not_found:
             return None
 
-        raise PasswordScaleError("Unexpected error")
+        raise SlashpassError("Unexpected error")
 
     def __init__(self, cache, private_key):
         self.cache = cache

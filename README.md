@@ -1,4 +1,4 @@
-# Password Scale
+# Slashpass
 
 [![Build Status](https://travis-ci.org/talpor/password-scale.svg?branch=master)](https://travis-ci.org/talpor/password-scale)
 

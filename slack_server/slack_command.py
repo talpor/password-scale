@@ -1,25 +1,18 @@
-import os
 import re
-import sys
 
 import validators
 from flask import Blueprint, abort, jsonify, request
 
+from core import SlashpassError
 from environ import CONFIGURATION_GUIDE_URL, SITE
 from server import Team, cmd, db
 from utils import error, success, valid_slack_request, warning
-
-sys.path.insert(1, os.path.join(sys.path[0], ".."))  # noqa
-from password_scale.core import PasswordScaleError
 
 view = Blueprint("slack_command", __name__)
 
 
 @view.route("", methods=["POST"])
 def api():
-
-    # import ipdb; ipdb.set_trace()
-
     data = request.values.to_dict()
     try:
         command = re.split("\s+", data["text"])
@@ -30,7 +23,6 @@ def api():
         abort(400)
 
     # ensuring that the request comes from slack
-    # if 'token' not in data or data['token'] != VERIFICATION_TOKEN:
     if not valid_slack_request(request):
         return abort(404)
 
@@ -198,7 +190,7 @@ def api():
     if command[0] in ["", "list"]:
         try:
             dir_ls = cmd.list(team, channel)
-        except PasswordScaleError as e:
+        except SlashpassError as e:
             return error("_{}_".format(e.message))
 
         if not dir_ls:

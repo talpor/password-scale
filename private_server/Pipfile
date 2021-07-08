@@ -5,11 +5,12 @@ name = "pypi"
 
 [packages]
 flask = "==1.1.4"
-pycryptodome = "==3.10.1"
 pytest = "==6.2.4"
 requests = "==2.25.1"
 boto3 = "==1.17.99"
 zappa = "==0.53.0"
+onetimesecret = "*"
+deterministic-rsa-keygen = "*"
 
 [dev-packages]
 ipython = "*"
